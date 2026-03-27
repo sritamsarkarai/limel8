@@ -1,3 +1,4 @@
+import "server-only";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { db } from "./db";
 
 export const authOptions: NextAuthOptions = {
-  // @ts-ignore — PrismaAdapter type mismatch with Prisma 7 generated client
+  // @ts-expect-error — PrismaAdapter type mismatch with Prisma 7 generated client
   adapter: PrismaAdapter(db),
   session: { strategy: "database" },
   providers: [
