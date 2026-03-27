@@ -20,7 +20,7 @@ ArtistConnect is a web-based social media platform for artists and musicians to 
 - **Auth:** NextAuth.js (database session strategy) — email/password + Google/Facebook OAuth
 - **File Storage:** Cloudinary — signed upload presets; digital download files stored as `authenticated` resource type (private)
 - **Real-time Messaging:** Supabase JS client Realtime — subscribes to `messages` table using anon key + NextAuth session JWT as Supabase auth token. RLS on `messages` ensures users can only receive their own messages. Prisma handles all writes.
-- **Payments:** Stripe Connect (Express accounts) — seller onboarding, payouts, platform fee collection
+- **Payments:** Stripe Connect (Express accounts) + Stripe Billing — Connect for seller payouts and transaction fees; Billing for subscriber subscriptions
 - **Email:** Resend — transactional emails
 - **Background Jobs:** Vercel Cron Jobs — daily job to auto-complete shipped orders older than 7 days
 - **Deployment:** Vercel (Next.js app + cron) + Supabase (database + realtime)
@@ -51,6 +51,8 @@ ArtistConnect is a web-based social media platform for artists and musicians to 
 - location: free-text string (e.g. "New York, USA")
 - availability status: `available_for_hire | open_to_collab | open_to_join | not_available`
 - social links: Instagram, Spotify, SoundCloud, YouTube, personal website (5 nullable string columns)
+- `subscription_status`: `free | active`
+- `subscription_tier`: `monthly | annual | null`
 - `stripe_account_id` (nullable) — set after Stripe Express Connect onboarding
 
 **Group**
@@ -78,7 +80,7 @@ ArtistConnect is a web-based social media platform for artists and musicians to 
 - buyer: Profile (FK)
 - listing: Listing (FK)
 - amount (total paid by buyer)
-- platform\_fee (10% of amount — `PLATFORM_FEE_PERCENT` constant)
+- platform\_fee (10% of listing price if price > $200 AND seller is not subscribed, else 0)
 - seller\_payout (amount − platform\_fee)
 - stripe\_payment\_intent\_id
 - shipping\_address: JSON (collected at Stripe Checkout; required for `physical` type only)
@@ -214,7 +216,21 @@ limel8/
 
 ## Monetization
 
-Platform takes **10%** of each sale via Stripe Connect Express (deducted at payout). Fee percentage exported as `PLATFORM_FEE_PERCENT` constant from `lib/stripe.ts`.
+**The platform is free to use.** No charge for profiles, posting, messaging, or search.
+
+**Revenue streams:**
+
+1. **Advertising** — ads displayed to all users. Ad network/provider to be decided in a later version.
+
+2. **Marketplace transaction fee** — 10% fee charged on sales where the listing price is **above $200**. Listings priced at $200 or below are fee-free. Fee deducted at payout via Stripe Connect Express. Fee logic exported as constants in `lib/stripe.ts`:
+   - `MARKETPLACE_FEE_PERCENT = 10`
+   - `MARKETPLACE_FEE_THRESHOLD = 200` (USD)
+
+3. **Subscription (fee waiver)** — subscribers pay **no transaction fees** regardless of listing price.
+   - Monthly: **$30/month**, cancel anytime
+   - Annual: **$200/year**, cancel anytime
+   - Subscription managed via Stripe Billing. `Profile` stores `subscription_status` (`free | active`) and `subscription_tier` (`monthly | annual | null`).
+   - Fee logic at order creation checks `seller.subscription_status === 'active'` before applying the fee.
 
 ---
 
@@ -234,7 +250,6 @@ Platform takes **10%** of each sale via Stripe Connect Express (deducted at payo
 - Mobile app
 - Algorithm-based feed ranking
 - Analytics dashboard
-- Premium/subscription tiers
 - Collaboration workspaces or join-request flows
 - Group search or group marketplace (v1: individual profiles only in search and selling)
 - Real-time presence / online status indicators
