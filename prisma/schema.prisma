@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── NextAuth tables ───────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Core models ───────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+}
+
+model Profile {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name               String
+  bio                String?            @db.Text
+  artistType         String?
+  avatarUrl          String?
+  bannerUrl          String?
+  location           String?
+  availabilityStatus AvailabilityStatus @default(not_available)
+  // Social links
+  instagramUrl       String?
+  spotifyUrl         String?
+  soundcloudUrl      String?
+  youtubeUrl         String?
+  websiteUrl         String?
+  // Stripe
+  stripeAccountId    String?
+  // Subscription
+  subscriptionStatus SubscriptionStatus @default(free)
+  subscriptionTier   SubscriptionTier?
+  stripeCustomerId   String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  posts            Post[]
+  listings         Listing[]
+  ordersAsBuyer    Order[]          @relation("buyer")
+  ordersAsSeller   Order[]          @relation("seller")
+  messagesSent     Message[]        @relation("sender")
+  messagesReceived Message[]        @relation("recipient")
+  groupsAdmin      Group[]          @relation("admin")
+  groupMemberships GroupMember[]
+  following        Follow[]         @relation("follower")
+  followedBy       Follow[]         @relation("followedProfile")
+}
+
+enum AvailabilityStatus {
+  available_for_hire
+  open_to_collab
+  open_to_join
+  not_available
+}
+
+enum SubscriptionStatus {
+  free
+  active
+}
+
+enum SubscriptionTier {
+  monthly
+  annual
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String?       @db.Text
+  bannerUrl   String?
+  adminId     String
+  admin       Profile       @relation("admin", fields: [adminId], references: [id])
+  members     GroupMember[]
+  posts       Post[]
+  followedBy  Follow[]      @relation("followedGroup")
+  createdAt   DateTime      @default(now())
+}
+
+model GroupMember {
+  profileId String
+  groupId   String
+  joinedAt  DateTime @default(now())
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, groupId])
+}
+
+// NOTE: The original spec used @@check to enforce exactly one of profileId/groupId
+// being non-null. Prisma 7 does not support @@check. Enforce this constraint via
+// a raw SQL migration step when the DB is connected:
+//   ALTER TABLE "Post" ADD CONSTRAINT post_author_check
+//   CHECK ((profile_id IS NOT NULL)::int + (group_id IS NOT NULL)::int = 1);
+model Post {
+  id        String   @id @default(cuid())
+  profileId String?
+  groupId   String?
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  content   String   @db.Text
+  mediaUrls String[]
+  createdAt DateTime @default(now())
+}
+
+// NOTE: The original spec used a composite @@id([followerId, followedProfileId, followedGroupId])
+// but Prisma 7 forbids optional fields in @@id. Replaced with a surrogate cuid() PK
+// and a @@unique constraint covering the same three columns so uniqueness is preserved.
+// The original spec also used @@check to enforce exactly one of followedProfileId/followedGroupId
+// being non-null. Add the following raw SQL constraint in a migration step:
+//   ALTER TABLE "Follow" ADD CONSTRAINT follow_target_check
+//   CHECK ((followed_profile_id IS NOT NULL)::int + (followed_group_id IS NOT NULL)::int = 1);
+model Follow {
+  id                String   @id @default(cuid())
+  followerId        String
+  followedProfileId String?
+  followedGroupId   String?
+  createdAt         DateTime @default(now())
+  follower          Profile  @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followedProfile   Profile? @relation("followedProfile", fields: [followedProfileId], references: [id], onDelete: Cascade)
+  followedGroup     Group?   @relation("followedGroup", fields: [followedGroupId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedProfileId, followedGroupId])
+}
+
+model Listing {
+  id                   String        @id @default(cuid())
+  sellerId             String
+  seller               Profile       @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  title                String
+  description          String        @db.Text
+  price                Decimal       @db.Decimal(10, 2)
+  type                 ListingType
+  previewMediaUrls     String[]
+  cloudinaryDownloadId String?
+  stockQuantity        Int?
+  status               ListingStatus @default(draft)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  orders               Order[]
+}
+
+enum ListingType {
+  digital
+  physical
+}
+
+enum ListingStatus {
+  draft
+  active
+  sold
+}
+
+model Order {
+  id                    String      @id @default(cuid())
+  buyerId               String
+  sellerId              String
+  listingId             String
+  buyer                 Profile     @relation("buyer", fields: [buyerId], references: [id])
+  seller                Profile     @relation("seller", fields: [sellerId], references: [id])
+  listing               Listing     @relation(fields: [listingId], references: [id])
+  amount                Decimal     @db.Decimal(10, 2)
+  platformFee           Decimal     @db.Decimal(10, 2)
+  sellerPayout          Decimal     @db.Decimal(10, 2)
+  stripePaymentIntentId String?     @unique
+  shippingAddress       Json?
+  status                OrderStatus @default(pending)
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+}
+
+enum OrderStatus {
+  pending
+  paid
+  shipped
+  complete
+  refunded
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String
+  recipientId String
+  content     String   @db.Text
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  sender      Profile  @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient   Profile  @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+}
