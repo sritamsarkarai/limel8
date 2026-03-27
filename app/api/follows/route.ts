@@ -60,6 +60,9 @@ export async function DELETE(req: Request) {
     return new NextResponse(null, { status: 204 });
   } catch (err) {
     console.error(err);
+    if (err instanceof Error && err.message === "Follow not found") {
+      return NextResponse.json({ error: "Follow not found" }, { status: 404 });
+    }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
