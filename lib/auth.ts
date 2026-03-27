@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
         const profile = await db.profile.findUnique({ where: { userId: user.id } });
-        (session.user as any).profileId = profile?.id ?? null;
+        session.user.profileId = profile?.id ?? null;
       }
       return session;
     },
