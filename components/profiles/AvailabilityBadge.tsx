@@ -13,9 +13,11 @@ const COLORS: Record<string, string> = {
 };
 
 export function AvailabilityBadge({ status }: { status: string }) {
+  const label = LABELS[status] ?? status;
+  const colorClass = COLORS[status] ?? "bg-gray-100 text-gray-500";
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${COLORS[status]}`}>
-      {LABELS[status]}
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}>
+      {label}
     </span>
   );
 }
