@@ -6,9 +6,9 @@ import { updateProfile } from "@/modules/profiles/mutations";
 
 export async function GET(
   _req: Request,
-  ctx: RouteContext<"/api/profiles/[id]">
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await ctx.params;
+  const { id } = await params;
   const result = await getProfileById(id);
   if (!result) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -18,14 +18,14 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  ctx: RouteContext<"/api/profiles/[id]">
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id } = await ctx.params;
+  const { id } = await params;
 
   // Verify the requester owns this profile (id is a p_-prefixed id)
   if (!id.startsWith("p_")) {

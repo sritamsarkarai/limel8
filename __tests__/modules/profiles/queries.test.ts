@@ -22,4 +22,11 @@ describe("getProfileById", () => {
     const result = await getProfileById("x_abc");
     expect(result).toBeNull();
   });
+
+  it("returns group for valid g_ prefixed id", async () => {
+    (db.group.findUnique as jest.Mock).mockResolvedValue({ id: "grp1" });
+    const result = await getProfileById("g_grp1");
+    expect(db.group.findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { id: "grp1" } }));
+    expect(result).toEqual({ type: "group", data: { id: "grp1" } });
+  });
 });

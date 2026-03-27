@@ -6,14 +6,14 @@ import { getProfileByUserId } from "@/modules/profiles/queries";
 
 export async function POST(
   req: Request,
-  ctx: RouteContext<"/api/groups/[id]/members">
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id: groupId } = await ctx.params;
+  const { id: groupId } = await params;
   const body = await req.json();
   const { profileId } = body;
   if (!profileId) {
@@ -26,14 +26,14 @@ export async function POST(
 
 export async function DELETE(
   req: Request,
-  ctx: RouteContext<"/api/groups/[id]/members">
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id: groupId } = await ctx.params;
+  const { id: groupId } = await params;
   const body = await req.json();
   const { profileId } = body;
   if (!profileId) {

@@ -9,6 +9,7 @@ export async function getProfileById(prefixedId: string) {
         groupsAdmin: true,
         groupMemberships: { include: { group: true } },
         listings: { where: { status: "active" } },
+        posts: { orderBy: { createdAt: 'desc' }, take: 20 },
       },
     });
     return data ? { type: "profile" as const, data } : null;
