@@ -116,7 +116,8 @@ model Group {
   description String?       @db.Text
   bannerUrl   String?
   adminId     String
-  admin       Profile       @relation("admin", fields: [adminId], references: [id])
+  // onDelete: Restrict — admin must re-assign or delete group before deleting their profile
+  admin       Profile       @relation("admin", fields: [adminId], references: [id], onDelete: Restrict)
   members     GroupMember[]
   posts       Post[]
   followedBy  Follow[]      @relation("followedGroup")
@@ -147,6 +148,9 @@ model Post {
   content   String   @db.Text
   mediaUrls String[]
   createdAt DateTime @default(now())
+
+  @@index([profileId, createdAt])
+  @@index([groupId, createdAt])
 }
 
 // NOTE: The original spec used a composite @@id([followerId, followedProfileId, followedGroupId])
@@ -156,6 +160,15 @@ model Post {
 // being non-null. Add the following raw SQL constraint in a migration step:
 //   ALTER TABLE "Follow" ADD CONSTRAINT follow_target_check
 //   CHECK ((followed_profile_id IS NOT NULL)::int + (followed_group_id IS NOT NULL)::int = 1);
+//
+// Partial unique indexes (apply via raw migration — prevents duplicate follows):
+//   CREATE UNIQUE INDEX follow_profile_unique
+//     ON "Follow"("followerId", "followedProfileId")
+//     WHERE "followedProfileId" IS NOT NULL;
+//
+//   CREATE UNIQUE INDEX follow_group_unique
+//     ON "Follow"("followerId", "followedGroupId")
+//     WHERE "followedGroupId" IS NOT NULL;
 model Follow {
   id                String   @id @default(cuid())
   followerId        String
@@ -184,6 +197,9 @@ model Listing {
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
   orders               Order[]
+
+  @@index([status, createdAt])
+  @@index([sellerId])
 }
 
 enum ListingType {
@@ -213,6 +229,10 @@ model Order {
   status                OrderStatus @default(pending)
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status, updatedAt])
 }
 
 enum OrderStatus {
@@ -232,4 +252,7 @@ model Message {
   createdAt   DateTime @default(now())
   sender      Profile  @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
   recipient   Profile  @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, recipientId])
+  @@index([createdAt])
 }
