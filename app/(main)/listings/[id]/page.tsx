@@ -1,8 +1,12 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { getListing } from "@/modules/marketplace/queries";
+import { getProfileByUserId } from "@/modules/profiles/queries";
 import { BuyButton } from "@/components/marketplace/BuyButton";
+import { ConnectStripeButton } from "@/components/marketplace/ConnectStripeButton";
 
 export default async function ListingPage({
   params,
@@ -11,10 +15,16 @@ export default async function ListingPage({
 }) {
   const { id } = await params;
   const listing = await getListing(id);
+  const session = await getServerSession(authOptions);
+  const viewerProfile = session?.user?.id ? await getProfileByUserId(session.user.id) : null;
 
   if (!listing) return notFound();
 
   const priceDisplay = listing.price.toString();
+  const isSellerWithNoBankAccount =
+    viewerProfile?.id === listing.sellerId &&
+    listing.status === "draft" &&
+    !listing.seller.stripeAccountId;
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
@@ -86,7 +96,11 @@ export default async function ListingPage({
         )}
 
         {listing.status === "draft" && (
-          <p className="text-sm font-medium text-gray-500">This listing is not yet published.</p>
+          isSellerWithNoBankAccount ? (
+            <ConnectStripeButton />
+          ) : (
+            <p className="text-sm font-medium text-gray-500">This listing is not yet published.</p>
+          )
         )}
       </div>
     </main>
