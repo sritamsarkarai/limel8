@@ -14,9 +14,9 @@ export async function publishListing(listingId: string, sellerId: string) {
   if (!seller?.stripeAccountId) {
     throw new Error("Stripe Connect onboarding required before publishing a listing");
   }
-  return db.listing.update({ where: { id: listingId }, data: { status: "active" } });
+  return db.listing.update({ where: { id: listingId, sellerId, status: "draft" }, data: { status: "active" } });
 }
 
 export async function updateListing(listingId: string, data: Partial<{ title: string; description: string; price: number; previewMediaUrls: string[]; stockQuantity: number }>) {
-  return db.listing.update({ where: { id: listingId }, data });
+  return db.listing.update({ where: { id: listingId, status: { in: ["draft", "active"] } }, data });
 }

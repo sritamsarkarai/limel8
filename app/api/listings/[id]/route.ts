@@ -44,6 +44,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const body = await req.json();
     const { publish, title, description, price, previewMediaUrls, stockQuantity } = body;
 
+    if (listing.status === "active" && body.price !== undefined) {
+      return NextResponse.json({ error: "Cannot change price of an active listing" }, { status: 400 });
+    }
+
     if (publish) {
       const updated = await publishListing(id, profile.id);
       return NextResponse.json(updated);

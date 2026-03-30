@@ -36,6 +36,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields: title, description, price, type" }, { status: 400 });
     }
 
+    if (typeof price !== "number" || price <= 0) {
+      return NextResponse.json({ error: "Price must be a positive number" }, { status: 400 });
+    }
+
     const listing = await createListing(profile.id, {
       title,
       description,
