@@ -2,13 +2,22 @@ import "server-only";
 import { db } from "@/lib/db";
 
 export async function getConversations(profileId: string) {
-  // Get the latest message per conversation partner
-  return db.message.findMany({
+  const messages = await db.message.findMany({
     where: { OR: [{ senderId: profileId }, { recipientId: profileId }] },
     orderBy: { createdAt: "desc" },
-    distinct: ["senderId", "recipientId"],
+    take: 200, // get enough to deduplicate
     include: { sender: true, recipient: true },
   });
+
+  // Deduplicate: keep latest message per conversation partner
+  const seen = new Map<string, typeof messages[0]>();
+  for (const msg of messages) {
+    const partnerId = msg.senderId === profileId ? msg.recipientId : msg.senderId;
+    if (!seen.has(partnerId)) {
+      seen.set(partnerId, msg);
+    }
+  }
+  return Array.from(seen.values());
 }
 
 export async function getMessages(profileId: string, otherProfileId: string) {

@@ -24,6 +24,7 @@ export default function ConversationPage({
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Fetch initial messages (GET also marks thread as read)
   useEffect(() => {
@@ -89,14 +90,13 @@ export default function ConversationPage({
       } catch (e) {
         console.error("Realtime setup failed:", e);
         // Fall back to polling every 10s
-        const interval = setInterval(async () => {
+        intervalRef.current = setInterval(async () => {
           const res = await fetch(`/api/messages/${profileId}`);
           if (res.ok) {
             const data = await res.json();
             setMessages(data);
           }
         }, 10000);
-        return () => clearInterval(interval);
       }
     }
 
@@ -105,8 +105,9 @@ export default function ConversationPage({
     return () => {
       cleanupPromise.then((cleanup) => {
         if (cleanup) cleanup();
-        supabase?.removeAllChannels();
+        if (supabase) supabase.removeAllChannels();
       });
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [currentProfileId, profileId]);
 
