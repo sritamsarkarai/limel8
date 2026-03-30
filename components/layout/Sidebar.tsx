@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-type Profile = { id: string; availabilityStatus: string };
+type Profile = { id: string };
 
 const NAV_LINKS = [
   { href: "/feed", label: "Feed" },

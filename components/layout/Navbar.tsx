@@ -22,7 +22,7 @@ export function Navbar({ profile }: { profile: Profile | null }) {
             <img src={profile.avatarUrl} alt={profile.name} className="w-8 h-8 rounded-full object-cover" />
           ) : (
             <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-semibold">
-              {profile.name[0].toUpperCase()}
+              {profile.name?.[0]?.toUpperCase() ?? "?"}
             </span>
           )}
         </Link>

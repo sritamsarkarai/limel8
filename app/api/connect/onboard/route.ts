@@ -16,7 +16,16 @@ export async function POST() {
     if (!accountId) {
       const account = await stripe.accounts.create({ type: "express" });
       accountId = account.id;
-      await db.profile.update({ where: { id: profile.id }, data: { stripeAccountId: accountId } });
+      // Only write if stripeAccountId is still null (guards against concurrent requests)
+      const updated = await db.profile.updateMany({
+        where: { id: profile.id, stripeAccountId: null },
+        data: { stripeAccountId: accountId },
+      });
+      if (updated.count === 0) {
+        // Another request already created an account; refetch to get the correct ID
+        const refreshed = await db.profile.findUnique({ where: { id: profile.id } });
+        accountId = refreshed?.stripeAccountId ?? accountId;
+      }
     }
 
     const accountLink = await stripe.accountLinks.create({
