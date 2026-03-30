@@ -17,8 +17,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Listing not available" }, { status: 400 });
     }
 
+    if (listing.type === "physical" && listing.stockQuantity !== null && listing.stockQuantity <= 0) {
+      return NextResponse.json({ error: "This item is out of stock" }, { status: 400 });
+    }
+
     const buyerProfile = await db.profile.findUnique({ where: { userId: session.user.id } });
     if (!buyerProfile) return NextResponse.json({ error: "Profile not found" }, { status: 400 });
+
+    if (buyerProfile.id === listing.sellerId) {
+      return NextResponse.json({ error: "Cannot purchase your own listing" }, { status: 400 });
+    }
 
     const isSubscribed = listing.seller.subscriptionStatus === "active";
     const priceUsd = Number(listing.price);

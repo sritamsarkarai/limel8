@@ -8,10 +8,14 @@ export async function GET(req: Request) {
   }
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const result = await db.order.updateMany({
-    where: { status: "shipped", updatedAt: { lt: sevenDaysAgo } },
-    data: { status: "complete" },
-  });
-
-  return NextResponse.json({ completed: result.count });
+  try {
+    const result = await db.order.updateMany({
+      where: { status: "shipped", updatedAt: { lt: sevenDaysAgo } },
+      data: { status: "complete" },
+    });
+    return NextResponse.json({ completed: result.count });
+  } catch (e: unknown) {
+    console.error("Cron auto-complete error:", e);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

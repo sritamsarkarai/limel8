@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getListing } from "@/modules/marketplace/queries";
+import { BuyButton } from "@/components/marketplace/BuyButton";
 
 export default async function ListingPage({
   params,
@@ -77,12 +78,7 @@ export default async function ListingPage({
         )}
 
         {listing.status === "active" && (
-          <Link
-            href={`/api/orders/checkout?listingId=${listing.id}`}
-            className="inline-block rounded-md bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700"
-          >
-            Buy Now
-          </Link>
+          <BuyButton listingId={listing.id} />
         )}
 
         {listing.status === "sold" && (
