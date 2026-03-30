@@ -13,7 +13,7 @@ export async function createSubscriptionCheckout(profileId: string, tier: "month
   if (!customerId) {
     const customer = await stripe.customers.create({ email: userEmail, metadata: { profileId } });
     customerId = customer.id;
-    await db.profile.update({ where: { id: profileId }, data: { stripeCustomerId: customerId } });
+    await db.profile.updateMany({ where: { id: profileId, stripeCustomerId: null }, data: { stripeCustomerId: customerId } });
   }
 
   const session = await stripe.checkout.sessions.create({
@@ -31,15 +31,14 @@ export async function cancelSubscription(profileId: string) {
   const profile = await db.profile.findUnique({ where: { id: profileId } });
   if (!profile?.stripeCustomerId) throw new Error("No active subscription");
 
-  // List active subscriptions for this customer
+  // List all non-cancelled subscriptions for this customer
   const subscriptions = await stripe.subscriptions.list({
     customer: profile.stripeCustomerId,
-    status: "active",
     limit: 1,
   });
-
-  if (subscriptions.data.length === 0) throw new Error("No active subscription found");
+  const activeSub = subscriptions.data.find(s => s.status === "active" || s.status === "trialing");
+  if (!activeSub) throw new Error("No active subscription found");
 
   // Cancel at period end (not immediately)
-  await stripe.subscriptions.update(subscriptions.data[0].id, { cancel_at_period_end: true });
+  await stripe.subscriptions.update(activeSub.id, { cancel_at_period_end: true });
 }

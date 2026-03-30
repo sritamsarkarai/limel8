@@ -22,9 +22,15 @@ export async function POST(req: Request) {
 
   try {
     if (event.type === "customer.subscription.created" || event.type === "customer.subscription.updated") {
-      const isActive = subscription.status === "active";
+      const isActive = subscription.status === "active" || subscription.status === "trialing";
       const priceId = subscription.items.data[0]?.price.id;
-      const tier = priceId === process.env.STRIPE_MONTHLY_PRICE_ID ? "monthly" : "annual";
+      const isMonthly = priceId === process.env.STRIPE_MONTHLY_PRICE_ID;
+      const isAnnual = priceId === process.env.STRIPE_ANNUAL_PRICE_ID;
+      if (!isMonthly && !isAnnual) {
+        console.error("Unknown price ID in subscription webhook:", priceId);
+        return NextResponse.json({ received: true });
+      }
+      const tier = isMonthly ? "monthly" : "annual";
       await db.profile.update({
         where: { id: profile.id },
         data: {

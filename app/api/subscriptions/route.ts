@@ -17,7 +17,10 @@ export async function POST(req: Request) {
     const profile = await getProfileByUserId(session.user.id);
     if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 });
 
-    const url = await createSubscriptionCheckout(profile.id, tier, session.user.email!);
+    const email = session.user.email;
+    if (!email) return NextResponse.json({ error: "User email not available" }, { status: 400 });
+
+    const url = await createSubscriptionCheckout(profile.id, tier, email);
     return NextResponse.json({ url });
   } catch (e: unknown) {
     console.error(e);

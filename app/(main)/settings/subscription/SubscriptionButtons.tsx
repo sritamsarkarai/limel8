@@ -46,7 +46,12 @@ export function CancelSubscriptionButton() {
     if (!confirm("Cancel your subscription? It will remain active until the end of the billing period.")) return;
     setLoading(true);
     try {
-      await fetch("/api/subscriptions/placeholder", { method: "DELETE" });
+      const res = await fetch("/api/subscriptions/cancel", { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error ?? "Failed to cancel subscription");
+        return;
+      }
       setDone(true);
       router.refresh();
     } finally {
