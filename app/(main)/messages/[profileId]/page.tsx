@@ -1,0 +1,195 @@
+"use client";
+
+import { use, useEffect, useState, useRef } from "react";
+import { MessageBubble } from "@/components/messaging/MessageBubble";
+import { createBrowserSupabaseClient } from "@/lib/supabase";
+
+interface Message {
+  id: string;
+  content: string;
+  createdAt: string;
+  senderId: string;
+  sender: { id: string; name: string; avatarUrl?: string | null };
+}
+
+export default function ConversationPage({
+  params,
+}: {
+  params: Promise<{ profileId: string }>;
+}) {
+  const { profileId } = use(params);
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
+  const [newMessage, setNewMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Fetch initial messages (GET also marks thread as read)
+  useEffect(() => {
+    async function loadMessages() {
+      const res = await fetch(`/api/messages/${profileId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data);
+        // Determine current profile from session user's messages
+        if (data.length > 0) {
+          // The recipient of others' messages is the current profile
+        }
+      }
+    }
+    loadMessages();
+  }, [profileId]);
+
+  // Get current profile id from session
+  useEffect(() => {
+    async function loadProfile() {
+      const res = await fetch("/api/auth/session");
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.user?.profileId) {
+          setCurrentProfileId(data.user.profileId);
+        }
+      }
+    }
+    loadProfile();
+  }, []);
+
+  // Set up Supabase Realtime subscription
+  useEffect(() => {
+    if (!currentProfileId) return;
+
+    let supabase: ReturnType<typeof createBrowserSupabaseClient> | null = null;
+
+    async function setupRealtime() {
+      try {
+        const tokenRes = await fetch("/api/messages/realtime-token");
+        if (!tokenRes.ok) throw new Error("Failed to get realtime token");
+        const { token } = await tokenRes.json();
+
+        supabase = createBrowserSupabaseClient();
+        supabase.realtime.setAuth(token);
+
+        supabase
+          .channel("messages")
+          .on(
+            "postgres_changes",
+            {
+              event: "INSERT",
+              schema: "public",
+              table: "messages",
+              filter: `recipient_id=eq.${currentProfileId}`,
+            },
+            (payload) => {
+              const msg = payload.new as Message;
+              setMessages((prev) => [...prev, msg]);
+            }
+          )
+          .subscribe();
+      } catch (e) {
+        console.error("Realtime setup failed:", e);
+        // Fall back to polling every 10s
+        const interval = setInterval(async () => {
+          const res = await fetch(`/api/messages/${profileId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setMessages(data);
+          }
+        }, 10000);
+        return () => clearInterval(interval);
+      }
+    }
+
+    const cleanupPromise = setupRealtime();
+
+    return () => {
+      cleanupPromise.then((cleanup) => {
+        if (cleanup) cleanup();
+        supabase?.removeAllChannels();
+      });
+    };
+  }, [currentProfileId, profileId]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function handleSend(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newMessage.trim() || !currentProfileId) return;
+
+    const content = newMessage.trim();
+    setNewMessage("");
+    setSending(true);
+
+    // Optimistic update
+    const tempMsg: Message = {
+      id: `temp-${Date.now()}`,
+      content,
+      createdAt: new Date().toISOString(),
+      senderId: currentProfileId,
+      sender: { id: currentProfileId, name: "You" },
+    };
+    setMessages((prev) => [...prev, tempMsg]);
+
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recipientId: profileId, content }),
+      });
+
+      if (res.ok) {
+        const saved = await res.json();
+        // Replace optimistic message with actual saved one
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempMsg.id ? { ...saved, createdAt: saved.createdAt } : m))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to send message:", err);
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <main className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-4">
+      <div className="flex-1 overflow-y-auto pb-4">
+        {messages.length === 0 ? (
+          <p className="py-8 text-center text-gray-500">
+            No messages yet. Say hello!
+          </p>
+        ) : (
+          messages.map((msg) => (
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              currentProfileId={currentProfileId ?? ""}
+            />
+          ))
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      <form onSubmit={handleSend} className="flex gap-2 border-t border-gray-200 pt-4">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type a message..."
+          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={sending}
+        />
+        <button
+          type="submit"
+          disabled={sending || !newMessage.trim()}
+          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          Send
+        </button>
+      </form>
+    </main>
+  );
+}
