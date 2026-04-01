@@ -4,6 +4,8 @@ import { handlePaymentIntentSucceeded } from "@/modules/marketplace/webhook";
 import { db } from "@/lib/db";
 import Stripe from "stripe";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");
@@ -23,10 +25,12 @@ export async function POST(req: Request) {
       ? checkoutSession.payment_intent
       : checkoutSession.payment_intent?.id;
 
-    if (paymentIntentId && checkoutSession.shipping_details) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const shippingDetails = (checkoutSession as any).shipping_details;
+    if (paymentIntentId && shippingDetails) {
       await db.order.updateMany({
         where: { stripePaymentIntentId: paymentIntentId },
-        data: { shippingAddress: checkoutSession.shipping_details as any },
+        data: { shippingAddress: shippingDetails },
       });
     }
   }

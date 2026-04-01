@@ -79,7 +79,7 @@ export default async function SearchPage({
         <p className="text-center text-gray-500">No profiles found. Try adjusting your search filters.</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {profiles.map((profile) => (
+          {profiles.map((profile: (typeof profiles)[number]) => (
             <ProfileCard key={profile.id} profile={profile} />
           ))}
         </div>

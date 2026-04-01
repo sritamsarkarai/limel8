@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { registerUser } from "@/modules/auth/register";
 
+export const dynamic = "force-dynamic";
+
 const USER_FACING_ERRORS = new Set([
   "Email already in use",
   "Password must be at least 8 characters",

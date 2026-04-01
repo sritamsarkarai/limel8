@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 import { cancelSubscription } from "@/modules/subscription/mutations";
 
+export const dynamic = "force-dynamic";
+
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   await params; // consume params even though we don't use id
   const session = await getServerSession(authOptions);

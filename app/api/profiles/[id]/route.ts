@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { getProfileById, getProfileByUserId } from "@/modules/profiles/queries";
 import { updateProfile } from "@/modules/profiles/mutations";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }

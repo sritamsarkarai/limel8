@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { db } from "./db";
 
 export const authOptions: NextAuthOptions = {
-  // @ts-expect-error — PrismaAdapter type mismatch with Prisma 7 generated client
+  // @ts-ignore — PrismaAdapter type mismatch with Prisma 7 generated client
   adapter: PrismaAdapter(db),
   session: { strategy: "database" },
   providers: [

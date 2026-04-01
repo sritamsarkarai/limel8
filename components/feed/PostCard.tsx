@@ -41,7 +41,7 @@ export function PostCard({ post }: PostCardProps) {
       <p className="whitespace-pre-wrap text-gray-800">{post.content}</p>
       {post.mediaUrls && post.mediaUrls.length > 0 && (
         <div className="mt-3 grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
-          {post.mediaUrls.map((url, index) => (
+          {post.mediaUrls.map((url: string, index: number) => (
             <img
               key={index}
               src={url}

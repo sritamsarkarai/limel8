@@ -5,6 +5,8 @@ import { getListings } from "@/modules/marketplace/queries";
 import { createListing } from "@/modules/marketplace/mutations";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);

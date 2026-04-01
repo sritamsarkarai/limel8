@@ -60,18 +60,19 @@ export default function ConversationPage({
   useEffect(() => {
     if (!currentProfileId) return;
 
-    let supabase: ReturnType<typeof createBrowserSupabaseClient> | null = null;
+    // supabase cleanup now handled in setupRealtime()
 
-    async function setupRealtime() {
+    async function setupRealtime(): Promise<() => void> {
+      let channel: any = null;
       try {
         const tokenRes = await fetch("/api/messages/realtime-token");
         if (!tokenRes.ok) throw new Error("Failed to get realtime token");
         const { token } = await tokenRes.json();
 
-        supabase = createBrowserSupabaseClient();
+        const supabase = createBrowserSupabaseClient();
         supabase.realtime.setAuth(token);
 
-        supabase
+        channel = supabase
           .channel("messages")
           .on(
             "postgres_changes",
@@ -81,33 +82,38 @@ export default function ConversationPage({
               table: "messages",
               filter: `recipient_id=eq.${currentProfileId}`,
             },
-            (payload) => {
+            (payload: any) => {
               const msg = payload.new as Message;
               setMessages((prev) => [...prev, msg]);
             }
           )
           .subscribe();
+
+        return () => {
+          if (channel) channel.unsubscribe();
+          supabase.removeAllChannels();
+        };
       } catch (e) {
         console.error("Realtime setup failed:", e);
-        // Fall back to polling every 10s
-        intervalRef.current = setInterval(async () => {
+        // Fall back to polling
+        const intervalId = setInterval(async () => {
           const res = await fetch(`/api/messages/${profileId}`);
           if (res.ok) {
             const data = await res.json();
             setMessages(data);
           }
         }, 10000);
+        return () => {
+          if (intervalId) clearInterval(intervalId);
+        };
       }
     }
 
     const cleanupPromise = setupRealtime();
 
     return () => {
-      cleanupPromise.then((cleanup) => {
-        if (cleanup) cleanup();
-        if (supabase) supabase.removeAllChannels();
-      });
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      // Fire-and-forget cleanup (sync return for React)
+      cleanupPromise.then(cleanupFn => cleanupFn?.());
     };
   }, [currentProfileId, profileId]);
 

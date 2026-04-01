@@ -5,6 +5,8 @@ import { getListing } from "@/modules/marketplace/queries";
 import { updateListing, publishListing } from "@/modules/marketplace/mutations";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;

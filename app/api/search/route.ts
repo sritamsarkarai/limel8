@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { searchProfiles } from "@/modules/search/queries";
-import { AvailabilityStatus } from "@prisma/client";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     const profiles = await searchProfiles({
       query,
       artistType,
-      availability: availability as AvailabilityStatus | undefined,
+      availability: availability as Parameters<typeof searchProfiles>[0]["availability"],
       location,
     });
 

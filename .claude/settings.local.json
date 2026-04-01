@@ -32,7 +32,8 @@
       "Bash(ls:*)",
       "Bash(mkdir -p \"C:\\\\Users\\\\C5182688\\\\Documents\\\\limel8\\\\app\\\\api\\\\orders\\\\[id]\\\\download\")",
       "Bash(mkdir -p \"C:\\\\Users\\\\C5182688\\\\Documents\\\\limel8\\\\app\\\\api\\\\orders\\\\[id]\\\\ship\")",
-      "Bash(mkdir -p \"C:\\\\Users\\\\C5182688\\\\Documents\\\\limel8\\\\app\\\\api\\\\orders\\\\[id]\\\\complete\")"
+      "Bash(mkdir -p \"C:\\\\Users\\\\C5182688\\\\Documents\\\\limel8\\\\app\\\\api\\\\orders\\\\[id]\\\\complete\")",
+      "Bash(vercel:*)"
     ]
   }
 }

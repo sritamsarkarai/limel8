@@ -36,7 +36,7 @@ export default async function ListingPage({
 
       {listing.previewMediaUrls.length > 0 && (
         <div className="mb-6 grid gap-2 sm:grid-cols-2">
-          {listing.previewMediaUrls.map((url, i) => (
+          {listing.previewMediaUrls.map((url: string, i: number) => (
             <div key={i} className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden">
               <Image src={url} alt={`${listing.title} preview ${i + 1}`} fill className="object-cover" />
             </div>

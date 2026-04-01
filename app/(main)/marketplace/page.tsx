@@ -28,7 +28,7 @@ export default async function MarketplacePage({
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {listings.map((listing) => (
+          {listings.map((listing: (typeof listings)[number]) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>

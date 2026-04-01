@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { createGroup } from "@/modules/profiles/mutations";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

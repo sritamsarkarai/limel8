@@ -5,6 +5,8 @@ import { getProfileByUserId } from "@/modules/profiles/queries";
 import { getMessages } from "@/modules/messaging/queries";
 import { markThreadRead } from "@/modules/messaging/mutations";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(_req: Request, { params }: { params: Promise<{ profileId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

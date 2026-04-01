@@ -5,6 +5,8 @@ import { addGroupMember, removeGroupMember } from "@/modules/profiles/mutations"
 import { getProfileByUserId } from "@/modules/profiles/queries";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }

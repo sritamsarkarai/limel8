@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 import { deletePost } from "@/modules/feed/mutations";
 
+export const dynamic = "force-dynamic";
+
 export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
