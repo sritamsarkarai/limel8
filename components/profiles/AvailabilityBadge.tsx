@@ -6,17 +6,17 @@ const LABELS: Record<string, string> = {
 };
 
 const COLORS: Record<string, string> = {
-  available_for_hire: "bg-green-100 text-green-800",
-  open_to_collab: "bg-blue-100 text-blue-800",
-  open_to_join: "bg-purple-100 text-purple-800",
-  not_available: "bg-gray-100 text-gray-500",
+  available_for_hire: "bg-cyan-950 text-cyan-400 border border-cyan-500/25",
+  open_to_collab:     "bg-cyan-950 text-cyan-400 border border-cyan-500/25",
+  open_to_join:       "bg-cyan-950 text-cyan-400 border border-cyan-500/25",
+  not_available:      "bg-zinc-800 text-zinc-500 border border-zinc-700",
 };
 
 export function AvailabilityBadge({ status }: { status: string }) {
   const label = LABELS[status] ?? status;
-  const colorClass = COLORS[status] ?? "bg-gray-100 text-gray-500";
+  const colorClass = COLORS[status] ?? "bg-zinc-800 text-zinc-500 border border-zinc-700";
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${colorClass}`}>
+    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${colorClass}`}>
       {label}
     </span>
   );
