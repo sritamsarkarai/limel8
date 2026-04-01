@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AvailabilityBadge } from "./AvailabilityBadge";
 
 type SocialLinks = {
@@ -35,7 +36,7 @@ type Profile = {
   posts?: Post[];
 } & SocialLinks;
 
-export function IndividualProfileView({ profile }: { profile: Profile }) {
+export function IndividualProfileView({ profile, currentProfileId }: { profile: Profile; currentProfileId?: string | null }) {
   const socialLinks = [
     { label: "Instagram", url: profile.instagramUrl },
     { label: "Spotify", url: profile.spotifyUrl },
@@ -73,12 +74,22 @@ export function IndividualProfileView({ profile }: { profile: Profile }) {
           </div>
         )}
         <div className="flex-1 space-y-1 mt-10">
-          <h1
-            className="text-2xl font-bold text-white"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {profile.name}
-          </h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1
+              className="text-2xl font-bold text-white"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {profile.name}
+            </h1>
+            {currentProfileId === profile.id && (
+              <Link
+                href="/settings/profile"
+                className="text-xs font-medium text-zinc-400 hover:text-white border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 px-3 py-1 rounded-lg transition-colors duration-200 cursor-pointer"
+              >
+                Edit Profile
+              </Link>
+            )}
+          </div>
           {profile.artistType && (
             <p className="text-sm text-zinc-400">{profile.artistType}</p>
           )}
