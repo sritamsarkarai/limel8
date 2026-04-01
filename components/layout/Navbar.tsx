@@ -22,7 +22,7 @@ export function Navbar({ profile }: { profile: Profile | null }) {
       </form>
       <Link
         href="/messages"
-        className="w-8 h-8 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 hover:text-white transition-colors cursor-pointer"
+        className="w-8 h-8 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
         aria-label="Messages"
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

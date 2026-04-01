@@ -57,7 +57,7 @@ export function Sidebar({ profile }: { profile: Profile | null }) {
         <Link
           key={href}
           href={href}
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors duration-200 cursor-pointer"
         >
           {icon}
           {label}
@@ -66,7 +66,7 @@ export function Sidebar({ profile }: { profile: Profile | null }) {
       {profile && (
         <Link
           href={`/profile/p_${profile.id}`}
-          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors duration-200 cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
