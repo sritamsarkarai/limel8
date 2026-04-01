@@ -18,16 +18,17 @@ interface ListingCardProps {
 
 export function ListingCard({ listing }: ListingCardProps) {
   const previewImage = listing.previewMediaUrls?.[0] ?? null;
-  const priceDisplay = typeof listing.price === "object"
-    ? listing.price.toString()
-    : listing.price.toFixed(2);
+  const priceDisplay =
+    typeof listing.price === "object"
+      ? listing.price.toString()
+      : listing.price.toFixed(2);
 
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="block rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+      className="block rounded-xl border border-zinc-700 bg-zinc-800 overflow-hidden hover:-translate-y-0.5 hover:border-cyan-500/50 transition-all duration-200 cursor-pointer"
     >
-      <div className="aspect-square w-full bg-gray-100 relative">
+      <div className="aspect-square w-full bg-zinc-700 relative">
         {previewImage ? (
           <Image
             src={previewImage}
@@ -36,21 +37,21 @@ export function ListingCard({ listing }: ListingCardProps) {
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-gray-400 text-sm">
+          <div className="flex h-full items-center justify-center text-zinc-500 text-sm">
             No preview
           </div>
         )}
       </div>
       <div className="p-3">
-        <h3 className="font-semibold text-gray-900 truncate">{listing.title}</h3>
-        <p className="text-sm text-gray-500 truncate">{listing.seller.name}</p>
+        <h3 className="font-semibold text-white truncate">{listing.title}</h3>
+        <p className="text-sm text-zinc-500 truncate mt-0.5">{listing.seller.name}</p>
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-base font-bold text-gray-900">${priceDisplay}</span>
+          <span className="text-base font-bold text-cyan-400">${priceDisplay}</span>
           <span
-            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+            className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${
               listing.type === "digital"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-green-100 text-green-700"
+                ? "bg-cyan-950 text-cyan-400 border-cyan-500/25"
+                : "bg-green-950 text-green-400 border-green-500/25"
             }`}
           >
             {listing.type === "digital" ? "Digital" : "Physical"}

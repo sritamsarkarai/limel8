@@ -27,7 +27,7 @@ export function BuyButton({ listingId }: { listingId: string }) {
     <button
       onClick={handleBuy}
       disabled={loading}
-      className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold px-6 py-3 rounded-lg"
+      className="bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-950 font-bold px-6 py-3 rounded-xl transition-colors duration-200 cursor-pointer"
     >
       {loading ? "Redirecting..." : "Buy Now"}
     </button>
