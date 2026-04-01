@@ -10,7 +10,7 @@ import { db } from "./db";
 export const authOptions: NextAuthOptions = {
   // @ts-ignore — PrismaAdapter type mismatch with Prisma 7 generated client
   adapter: PrismaAdapter(db),
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -33,11 +33,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
         const profile = await db.profile.findUnique({ where: { userId: user.id } });
-        session.user.profileId = profile?.id ?? null;
+        token.profileId = profile?.id ?? null;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.profileId = token.profileId as string | null;
       }
       return session;
     },
