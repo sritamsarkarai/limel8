@@ -39,21 +39,21 @@ export function PostComposer() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="What's on your mind?"
+        placeholder="What are you working on?"
         rows={3}
-        className="w-full resize-none rounded-md border border-gray-300 p-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        className="w-full resize-none rounded-lg border border-zinc-600 bg-zinc-700 p-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/20"
         disabled={loading}
       />
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      <div className="mt-2 flex justify-end">
+      {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+      <div className="mt-3 flex justify-end">
         <button
           type="submit"
           disabled={loading || !content.trim()}
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200 cursor-pointer"
         >
           {loading ? "Posting…" : "Post"}
         </button>
