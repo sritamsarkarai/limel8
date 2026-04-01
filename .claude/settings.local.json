@@ -37,7 +37,18 @@
       "Bash(rm:*)",
       "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma migrate deploy)",
       "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma migrate dev --name init)",
-      "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma db execute --file prisma/migrations/manual_constraints.sql)"
+      "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma db execute --file prisma/migrations/manual_constraints.sql)",
+      "Bash(bash:*)",
+      "Bash(python skills/ui-ux-pro-max/scripts/search.py \"artist creative platform social marketplace dark vibrant\" --design-system -p \"LimeL8\")",
+      "Bash(python3 skills/ui-ux-pro-max/scripts/search.py \"artist creative platform social marketplace dark vibrant\" --design-system -p \"LimeL8\")",
+      "Bash(python \"C:/Users/C5182688/Documents/limel8/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"artist creative platform social marketplace dark vibrant\" --design-system -p \"LimeL8\")",
+      "Bash(python3 \"C:/Users/C5182688/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/ui-ux-pro-max/scripts/search.py\" \"artist creative platform social marketplace dark vibrant\" --design-system -p \"LimeL8\")",
+      "Bash(python3:*)",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"dark mode creative social music art\" --domain style)",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"dark social platform typography\" --domain typography)",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"creative bold modern\" --domain typography)",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"dark creative\" --domain color)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }
