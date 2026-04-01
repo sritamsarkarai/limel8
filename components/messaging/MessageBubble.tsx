@@ -18,14 +18,14 @@ export function MessageBubble({ message, currentProfileId }: MessageBubbleProps)
   return (
     <div className={`flex ${isSent ? "justify-end" : "justify-start"} mb-2`}>
       <div
-        className={`max-w-xs rounded-lg px-4 py-2 text-sm ${
+        className={`max-w-xs rounded-xl px-4 py-2.5 text-sm ${
           isSent
-            ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-900"
+            ? "bg-cyan-500 text-zinc-950"
+            : "bg-zinc-800 text-zinc-200 border border-zinc-700"
         }`}
       >
         <p>{message.content}</p>
-        <p className={`mt-1 text-xs ${isSent ? "text-blue-200" : "text-gray-500"}`}>
+        <p className={`mt-1 text-xs ${isSent ? "text-cyan-900" : "text-zinc-500"}`}>
           {timestamp}
         </p>
       </div>
