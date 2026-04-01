@@ -5,7 +5,7 @@ type Profile = { id: string; name: string; avatarUrl?: string | null };
 export function Navbar({ profile }: { profile: Profile | null }) {
   return (
     <nav className="bg-white border-b px-6 py-3 flex items-center gap-4">
-      <Link href="/feed" className="font-bold text-lg text-blue-600">ArtistConnect</Link>
+      <Link href="/feed" className="font-bold text-lg text-blue-600">LimeL8</Link>
       <form method="get" action="/search" className="flex-1 max-w-md">
         <input
           name="query"

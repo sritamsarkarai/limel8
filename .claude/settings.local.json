@@ -34,7 +34,10 @@
       "Bash(mkdir -p \"C:\\\\Users\\\\C5182688\\\\Documents\\\\limel8\\\\app\\\\api\\\\orders\\\\[id]\\\\ship\")",
       "Bash(mkdir -p \"C:\\\\Users\\\\C5182688\\\\Documents\\\\limel8\\\\app\\\\api\\\\orders\\\\[id]\\\\complete\")",
       "Bash(vercel:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma migrate deploy)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma migrate dev --name init)",
+      "Bash(DATABASE_URL=\"postgresql://postgres.rqottdykcglkrxmbodda:eaZwpABizx&7NNd@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres\" npx prisma db execute --file prisma/migrations/manual_constraints.sql)"
     ]
   }
 }

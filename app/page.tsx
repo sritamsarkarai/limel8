@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white flex flex-col">
       <header className="px-6 py-4 flex items-center justify-between border-b border-gray-100">
-        <span className="text-xl font-bold text-gray-900">ArtistConnect</span>
+        <span className="text-xl font-bold text-gray-900">LimeL8</span>
         <div className="flex gap-3">
           <Link
             href="/login"
@@ -26,7 +26,7 @@ export default function Home() {
           Connect, collaborate, and sell your art
         </h1>
         <p className="mt-6 text-xl text-gray-500 max-w-xl">
-          ArtistConnect is the platform for musicians, painters, photographers, and digital artists to find collaborators, grow an audience, and sell their work.
+          LimeL8 is the platform for musicians, painters, photographers, and digital artists to find collaborators, grow an audience, and sell their work.
         </p>
         <div className="mt-10 flex gap-4">
           <Link
@@ -62,7 +62,7 @@ export default function Home() {
       </section>
 
       <footer className="px-6 py-6 text-center text-sm text-gray-400 border-t border-gray-100">
-        &copy; {new Date().getFullYear()} ArtistConnect
+        &copy; {new Date().getFullYear()} LimeL8
       </footer>
     </main>
   );
