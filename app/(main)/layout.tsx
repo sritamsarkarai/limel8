@@ -12,7 +12,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   const profile = await getProfileByUserId(session.user.id);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-zinc-950">
       <Navbar profile={profile} />
       <div className="flex flex-1 min-h-0">
         <Sidebar profile={profile} />

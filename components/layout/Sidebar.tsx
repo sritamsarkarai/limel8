@@ -6,13 +6,25 @@ import { useEffect, useState } from "react";
 
 type Profile = { id: string };
 
-const NAV_LINKS = [
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  iconActive?: React.ReactNode;
+};
+
+const MAIN_LINKS: NavItem[] = [
   {
     href: "/feed",
     label: "Feed",
     icon: (
       <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
       </svg>
     ),
   },
@@ -24,13 +36,23 @@ const NAV_LINKS = [
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
     ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    ),
   },
   {
     href: "/marketplace",
-    label: "Market",
+    label: "Marketplace",
     icon: (
       <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M19 6l-3-4H8L5 6H2v2h1l1 12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l1-12h1V6h-3zm-7 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
       </svg>
     ),
   },
@@ -40,6 +62,28 @@ const NAV_LINKS = [
     icon: (
       <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+      </svg>
+    ),
+  },
+];
+
+const SECONDARY_LINKS: NavItem[] = [
+  {
+    href: "/settings/subscription",
+    label: "Subscription",
+    icon: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+    ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 5H4V7h16v2z"/>
       </svg>
     ),
   },
@@ -54,6 +98,36 @@ const NAV_LINKS = [
   },
 ];
 
+// Exported so Navbar can call it
+export let sidebarToggle: (() => void) | null = null;
+
+function NavLink({
+  href,
+  label,
+  icon,
+  iconActive,
+  isActive,
+  collapsed,
+  profileMatch,
+}: NavItem & { isActive: boolean; collapsed: boolean; profileMatch?: boolean }) {
+  return (
+    <Link
+      href={href}
+      title={collapsed ? label : undefined}
+      className={`flex items-center gap-4 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-150 cursor-pointer group ${
+        isActive
+          ? "bg-zinc-800 text-white"
+          : "text-zinc-400 hover:bg-zinc-800/60 hover:text-white"
+      } ${collapsed ? "justify-center px-0 py-3" : ""}`}
+    >
+      <span className={isActive ? "text-white" : "text-zinc-400 group-hover:text-white"}>
+        {isActive && iconActive ? iconActive : icon}
+      </span>
+      {!collapsed && <span className={`truncate ${isActive ? "font-semibold" : ""}`}>{label}</span>}
+    </Link>
+  );
+}
+
 export function Sidebar({ profile }: { profile: Profile | null }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -63,84 +137,73 @@ export function Sidebar({ profile }: { profile: Profile | null }) {
     if (stored !== null) setCollapsed(stored === "true");
   }, []);
 
-  function toggle() {
-    setCollapsed((v) => {
-      localStorage.setItem("sidebar-collapsed", String(!v));
-      return !v;
-    });
-  }
+  useEffect(() => {
+    sidebarToggle = () =>
+      setCollapsed((v) => {
+        localStorage.setItem("sidebar-collapsed", String(!v));
+        return !v;
+      });
+    return () => { sidebarToggle = null; };
+  }, []);
 
   const profileHref = profile ? `/profile/p_${profile.id}` : "/feed";
 
-  const allLinks = [
-    ...NAV_LINKS,
-    ...(profile
-      ? [{
-          href: profileHref,
-          label: "Profile",
-          icon: (
-            <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
-          ),
-        }]
-      : []),
-  ];
+  const profileLink: NavItem = {
+    href: profileHref,
+    label: "My Profile",
+    icon: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+      </svg>
+    ),
+  };
 
   return (
     <>
-      {/* ── Desktop sidebar (hidden on mobile) ── */}
+      {/* ── Desktop sidebar ── */}
       <aside
-        className="hidden md:flex flex-col border-r border-cyan-500/10 bg-zinc-900 transition-all duration-300 shrink-0"
-        style={{ width: collapsed ? "56px" : "224px" }}
+        className="hidden md:flex flex-col bg-zinc-950 shrink-0 transition-all duration-300 overflow-hidden"
+        style={{ width: collapsed ? "72px" : "240px" }}
       >
-        <nav className="flex-1 p-2 space-y-1 overflow-hidden">
-          {allLinks.map(({ href, label, icon }) => {
-            const isActive =
-              href === profileHref
-                ? pathname.startsWith("/profile")
-                : pathname === href || pathname.startsWith(href + "/");
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2 space-y-0.5">
+          {/* Main nav */}
+          {MAIN_LINKS.map(({ href, label, icon, iconActive }) => {
+            const isActive = pathname === href || pathname.startsWith(href + "/");
             return (
-              <Link
-                key={href}
-                href={href}
-                title={collapsed ? label : undefined}
-                className={`relative flex items-center gap-3 px-2.5 py-2 rounded-lg text-sm transition-colors duration-200 cursor-pointer ${
-                  isActive
-                    ? "bg-cyan-950/40 text-cyan-400 border border-cyan-500/[0.27] shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]"
-                    : "text-zinc-400 hover:bg-zinc-800 hover:text-white border border-transparent"
-                }`}
-              >
-                {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-3/5 bg-cyan-400 rounded-r shadow-[0_0_6px_#22d3ee]" />
-                )}
-                {icon}
-                {!collapsed && <span className="truncate">{label}</span>}
-              </Link>
+              <NavLink key={href} href={href} label={label} icon={icon} iconActive={iconActive} isActive={isActive} collapsed={collapsed} />
             );
           })}
-        </nav>
 
-        {/* Toggle button — icon only */}
-        <div className="p-2 border-t border-cyan-500/10">
-          <button
-            onClick={toggle}
-            className="flex w-full items-center justify-center rounded-lg p-2 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors cursor-pointer"
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <svg
-              className={`w-4 h-4 shrink-0 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
-              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
-            >
-              <path d="M15 18l-6-6 6-6"/>
-            </svg>
-          </button>
+          {/* Profile link */}
+          {profile && (
+            <NavLink
+              {...profileLink}
+              isActive={pathname.startsWith("/profile")}
+              collapsed={collapsed}
+            />
+          )}
+
+          {/* Divider */}
+          <div className="my-2 border-t border-zinc-800" />
+
+          {/* Secondary nav */}
+          {SECONDARY_LINKS.map(({ href, label, icon, iconActive }) => {
+            const isActive = pathname === href || pathname.startsWith(href + "/");
+            return (
+              <NavLink key={href} href={href} label={label} icon={icon} iconActive={iconActive} isActive={isActive} collapsed={collapsed} />
+            );
+          })}
         </div>
       </aside>
 
-      {/* ── Mobile bottom tab bar (hidden on desktop) ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex bg-zinc-900 border-t border-cyan-500/10 pb-safe">
-        {allLinks.map(({ href, label, icon }) => {
+      {/* ── Mobile bottom tab bar ── */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex bg-zinc-900 border-t border-zinc-800">
+        {[...MAIN_LINKS, ...(profile ? [profileLink] : [])].map(({ href, label, icon, iconActive }) => {
           const isActive =
             href === profileHref
               ? pathname.startsWith("/profile")
@@ -150,10 +213,10 @@ export function Sidebar({ profile }: { profile: Profile | null }) {
               key={href}
               href={href}
               className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition-colors ${
-                isActive ? "text-cyan-400" : "text-zinc-500 hover:text-zinc-300"
+                isActive ? "text-white" : "text-zinc-500"
               }`}
             >
-              {icon}
+              {isActive && iconActive ? iconActive : icon}
               <span>{label}</span>
             </Link>
           );
