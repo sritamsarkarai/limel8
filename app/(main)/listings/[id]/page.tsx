@@ -29,7 +29,7 @@ export default async function ListingPage({
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <div className="mb-4">
-        <Link href="/marketplace" className="text-sm text-blue-600 hover:underline">
+        <Link href="/marketplace" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
           &larr; Back to Marketplace
         </Link>
       </div>
@@ -37,7 +37,7 @@ export default async function ListingPage({
       {listing.previewMediaUrls.length > 0 && (
         <div className="mb-6 grid gap-2 sm:grid-cols-2">
           {listing.previewMediaUrls.map((url: string, i: number) => (
-            <div key={i} className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden">
+            <div key={i} className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden border border-cyan-500/[0.27] shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]">
               <Image src={url} alt={`${listing.title} preview ${i + 1}`} fill className="object-cover" />
             </div>
           ))}
@@ -48,17 +48,17 @@ export default async function ListingPage({
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-2xl font-bold text-gray-900">{listing.title}</h1>
           <span
-            className={`shrink-0 text-sm px-2.5 py-1 rounded-full font-medium ${
+            className={`shrink-0 text-sm px-2.5 py-1 rounded-full font-medium border ${
               listing.type === "digital"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-green-100 text-green-700"
+                ? "bg-cyan-950 text-cyan-400 border-cyan-500/25 shadow-[0_0_8px_rgba(34,211,238,0.2)]"
+                : "bg-violet-950/60 text-violet-400 border-violet-400/25 shadow-[0_0_8px_rgba(167,139,250,0.2)]"
             }`}
           >
             {listing.type === "digital" ? "Digital" : "Physical"}
           </span>
         </div>
 
-        <p className="text-3xl font-bold text-gray-900">${priceDisplay}</p>
+        <p className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">${priceDisplay}</p>
 
         <div className="flex items-center gap-2 text-sm text-gray-600">
           {listing.seller.avatarUrl && (
@@ -67,7 +67,7 @@ export default async function ListingPage({
               alt={listing.seller.name}
               width={24}
               height={24}
-              className="rounded-full"
+              className="rounded-full border border-cyan-500/40"
             />
           )}
           <span>Sold by <strong>{listing.seller.name}</strong></span>
