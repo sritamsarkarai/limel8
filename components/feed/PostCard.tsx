@@ -14,17 +14,17 @@ export function PostCard({ post }: PostCardProps) {
   const avatarUrl = post.profile?.avatarUrl;
 
   return (
-    <article className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
+    <article className="rounded-xl border border-cyan-500/[0.27] bg-zinc-900 p-4 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_20px_rgba(34,211,238,0.13),0_0_40px_rgba(34,211,238,0.05)]">
       <div className="mb-3 flex items-center gap-3">
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={avatarUrl}
             alt={authorName}
-            className="h-10 w-10 rounded-full object-cover border-2 border-zinc-600"
+            className="h-10 w-10 rounded-full object-cover border-2 border-cyan-500/40 shadow-[0_0_8px_rgba(34,211,238,0.2)]"
           />
         ) : (
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-950 border border-cyan-500/25 text-sm font-semibold text-cyan-400">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-950 border border-cyan-500/40 text-sm font-semibold text-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.2)]">
             {authorName.charAt(0).toUpperCase()}
           </div>
         )}
@@ -48,7 +48,7 @@ export function PostCard({ post }: PostCardProps) {
               key={index}
               src={url}
               alt={`Media ${index + 1}`}
-              className="w-full rounded-lg object-cover"
+              className="w-full rounded-lg object-cover border border-cyan-500/[0.27]"
             />
           ))}
         </div>

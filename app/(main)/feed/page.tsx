@@ -21,12 +21,12 @@ export default async function FeedPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Your Feed</h1>
+      <h1 className="mb-6 text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent" style={{ fontFamily: "var(--font-heading)" }}>Your Feed</h1>
       <div className="mb-6">
         <PostComposer />
       </div>
       {posts.length === 0 ? (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-zinc-500">
           No posts yet. Follow some profiles or groups to see their posts here.
         </p>
       ) : (

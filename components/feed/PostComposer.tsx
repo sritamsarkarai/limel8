@@ -39,13 +39,13 @@ export function PostComposer() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-zinc-700 bg-zinc-800 p-4">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-cyan-500/[0.27] bg-zinc-900 p-4 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_20px_rgba(34,211,238,0.13),0_0_40px_rgba(34,211,238,0.05)]">
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="What are you working on?"
         rows={3}
-        className="w-full resize-none rounded-lg border border-zinc-600 bg-zinc-700 p-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/20"
+        className="w-full resize-none rounded-lg border border-cyan-500/[0.27] bg-zinc-800 p-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-cyan-500/[0.4] focus:outline-none shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)] focus:shadow-[0_0_0_1px_rgba(34,211,238,0.27),0_0_20px_rgba(34,211,238,0.16)]"
         disabled={loading}
       />
       {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
@@ -53,7 +53,7 @@ export function PostComposer() {
         <button
           type="submit"
           disabled={loading || !content.trim()}
-          className="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200 cursor-pointer"
+          className="rounded-lg bg-gradient-to-r from-cyan-400 to-violet-400 px-4 py-2 text-sm font-bold text-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 transition-opacity cursor-pointer shadow-[0_0_20px_rgba(34,211,238,0.2),0_4px_12px_rgba(34,211,238,0.13)]"
         >
           {loading ? "Posting…" : "Post"}
         </button>
