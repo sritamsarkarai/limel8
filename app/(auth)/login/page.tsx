@@ -72,7 +72,7 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div style={{ animation: "fadeUp 400ms cubic-bezier(0.16,1,0.3,1) 200ms both" }}>
             <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
               Email
             </label>
@@ -86,7 +86,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <div>
+          <div style={{ animation: "fadeUp 400ms cubic-bezier(0.16,1,0.3,1) 300ms both" }}>
             <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
               Password
             </label>
@@ -100,13 +100,15 @@ export default function LoginPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-cyan-500 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-          >
-            {loading ? "Signing in…" : "Sign in"}
-          </button>
+          <div style={{ animation: "fadeUp 400ms cubic-bezier(0.16,1,0.3,1) 400ms both" }}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-cyan-500 px-4 py-2 text-sm font-bold text-zinc-950 hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              {loading ? "Signing in…" : "Sign in"}
+            </button>
+          </div>
         </form>
 
         <div className="my-6 flex items-center gap-3">
