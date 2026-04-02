@@ -37,7 +37,7 @@ export default async function ListingPage({
       {listing.previewMediaUrls.length > 0 && (
         <div className="mb-6 grid gap-2 sm:grid-cols-2">
           {listing.previewMediaUrls.map((url: string, i: number) => (
-            <div key={i} className="relative aspect-square w-full bg-gray-100 rounded-lg overflow-hidden border border-cyan-500/[0.27] shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]">
+            <div key={i} className="relative aspect-square w-full bg-zinc-700 rounded-lg overflow-hidden border border-cyan-500/[0.27] shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]">
               <Image src={url} alt={`${listing.title} preview ${i + 1}`} fill className="object-cover" />
             </div>
           ))}
@@ -46,7 +46,7 @@ export default async function ListingPage({
 
       <div className="space-y-4">
         <div className="flex items-start justify-between gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">{listing.title}</h1>
+          <h1 className="text-2xl font-bold text-white">{listing.title}</h1>
           <span
             className={`shrink-0 text-sm px-2.5 py-1 rounded-full font-medium border ${
               listing.type === "digital"
@@ -60,7 +60,7 @@ export default async function ListingPage({
 
         <p className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">${priceDisplay}</p>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-zinc-400">
           {listing.seller.avatarUrl && (
             <Image
               src={listing.seller.avatarUrl}
@@ -73,14 +73,14 @@ export default async function ListingPage({
           <span>Sold by <strong>{listing.seller.name}</strong></span>
         </div>
 
-        <p className="text-gray-700 whitespace-pre-wrap">{listing.description}</p>
+        <p className="text-zinc-300 whitespace-pre-wrap leading-relaxed">{listing.description}</p>
 
         {listing.type === "digital" && (
-          <p className="text-sm text-blue-600 font-medium">Digital download — delivered instantly</p>
+          <p className="text-sm text-cyan-400 font-medium">Digital download — delivered instantly</p>
         )}
 
         {listing.type === "physical" && listing.stockQuantity != null && (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-zinc-400">
             {listing.stockQuantity > 0
               ? `${listing.stockQuantity} in stock`
               : "Out of stock"}
@@ -92,14 +92,14 @@ export default async function ListingPage({
         )}
 
         {listing.status === "sold" && (
-          <p className="text-sm font-medium text-gray-500">This listing has been sold.</p>
+          <p className="text-sm font-medium text-zinc-500">This listing has been sold.</p>
         )}
 
         {listing.status === "draft" && (
           isSellerWithNoBankAccount ? (
             <ConnectStripeButton />
           ) : (
-            <p className="text-sm font-medium text-gray-500">This listing is not yet published.</p>
+            <p className="text-sm font-medium text-zinc-500">This listing is not yet published.</p>
           )
         )}
       </div>
