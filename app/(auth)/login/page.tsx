@@ -31,6 +31,27 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bloomIn {
+          from { opacity: 0; transform: scale(0.8); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+
+      {/* Background bloom */}
+      <div
+        className="pointer-events-none fixed inset-0"
+        style={{
+          background: "radial-gradient(ellipse at 50% 30%, rgba(34,211,238,0.08) 0%, transparent 60%)",
+          animation: "bloomIn 900ms cubic-bezier(0.16,1,0.3,1) both",
+        }}
+      />
+
+      {/* existing content continues unchanged below */}
       <div className="w-full max-w-md rounded-2xl bg-zinc-900 border border-zinc-800 p-8">
         <h1
           className="mb-6 text-2xl font-bold text-white"
