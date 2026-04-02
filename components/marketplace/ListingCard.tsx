@@ -23,10 +23,22 @@ export function ListingCard({ listing }: ListingCardProps) {
       ? listing.price.toString()
       : listing.price.toFixed(2);
 
+  const isDigital = listing.type === "digital";
+
+  const cardGlow = isDigital
+    ? "border-cyan-500/[0.27] shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_20px_rgba(34,211,238,0.13),0_0_40px_rgba(34,211,238,0.05)] hover:border-cyan-500/[0.4] hover:shadow-[0_0_0_1px_rgba(34,211,238,0.27),0_0_20px_rgba(34,211,238,0.16),0_0_40px_rgba(34,211,238,0.06)]"
+    : "border-violet-400/[0.27] shadow-[0_0_0_1px_rgba(167,139,250,0.13),0_0_20px_rgba(167,139,250,0.13),0_0_40px_rgba(167,139,250,0.05)] hover:border-violet-400/[0.4] hover:shadow-[0_0_0_1px_rgba(167,139,250,0.27),0_0_20px_rgba(167,139,250,0.16),0_0_40px_rgba(167,139,250,0.06)]";
+
+  const priceColor = isDigital ? "text-cyan-400" : "text-violet-400";
+
+  const badgeClass = isDigital
+    ? "bg-cyan-950 text-cyan-400 border-cyan-500/25"
+    : "bg-violet-950/60 text-violet-400 border-violet-400/25";
+
   return (
     <Link
       href={`/listings/${listing.id}`}
-      className="block rounded-xl border border-zinc-700 bg-zinc-800 overflow-hidden hover:-translate-y-0.5 hover:border-cyan-500/50 transition-all duration-200 cursor-pointer"
+      className={`block rounded-xl border bg-zinc-800 overflow-hidden hover:-translate-y-0.5 transition-all duration-200 cursor-pointer ${cardGlow}`}
     >
       <div className="aspect-square w-full bg-zinc-700 relative">
         {previewImage ? (
@@ -46,15 +58,9 @@ export function ListingCard({ listing }: ListingCardProps) {
         <h3 className="font-semibold text-white truncate">{listing.title}</h3>
         <p className="text-sm text-zinc-500 truncate mt-0.5">{listing.seller.name}</p>
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-base font-bold text-cyan-400">${priceDisplay}</span>
-          <span
-            className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${
-              listing.type === "digital"
-                ? "bg-cyan-950 text-cyan-400 border-cyan-500/25"
-                : "bg-green-950 text-green-400 border-green-500/25"
-            }`}
-          >
-            {listing.type === "digital" ? "Digital" : "Physical"}
+          <span className={`text-base font-bold ${priceColor}`}>${priceDisplay}</span>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${badgeClass}`}>
+            {isDigital ? "Digital" : "Physical"}
           </span>
         </div>
       </div>
