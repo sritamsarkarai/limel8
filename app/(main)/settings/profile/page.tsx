@@ -29,6 +29,7 @@ export default async function EditProfilePage() {
             location: profile.location,
             availabilityStatus: profile.availabilityStatus,
             instagramUrl: profile.instagramUrl,
+            facebookUrl: profile.facebookUrl,
             youtubeUrl: profile.youtubeUrl,
             spotifyUrl: profile.spotifyUrl,
             soundcloudUrl: profile.soundcloudUrl,

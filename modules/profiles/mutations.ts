@@ -13,6 +13,7 @@ export async function updateProfile(
     avatarUrl?: string;
     bannerUrl?: string;
     instagramUrl?: string;
+    facebookUrl?: string;
     spotifyUrl?: string;
     soundcloudUrl?: string;
     youtubeUrl?: string;

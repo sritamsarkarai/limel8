@@ -19,6 +19,7 @@ interface ProfileEditFormProps {
     location?: string | null;
     availabilityStatus: string;
     instagramUrl?: string | null;
+    facebookUrl?: string | null;
     youtubeUrl?: string | null;
     spotifyUrl?: string | null;
     soundcloudUrl?: string | null;
@@ -38,6 +39,7 @@ export function ProfileEditForm({ profileId, initial }: ProfileEditFormProps) {
   const [location, setLocation] = useState(initial.location ?? "");
   const [availabilityStatus, setAvailabilityStatus] = useState(initial.availabilityStatus ?? "not_available");
   const [instagramUrl, setInstagramUrl] = useState(initial.instagramUrl ?? "");
+  const [facebookUrl, setFacebookUrl] = useState(initial.facebookUrl ?? "");
   const [youtubeUrl, setYoutubeUrl] = useState(initial.youtubeUrl ?? "");
   const [spotifyUrl, setSpotifyUrl] = useState(initial.spotifyUrl ?? "");
   const [soundcloudUrl, setSoundcloudUrl] = useState(initial.soundcloudUrl ?? "");
@@ -60,6 +62,7 @@ export function ProfileEditForm({ profileId, initial }: ProfileEditFormProps) {
           location: location.trim() || null,
           availabilityStatus,
           instagramUrl: instagramUrl.trim() || null,
+          facebookUrl: facebookUrl.trim() || null,
           youtubeUrl: youtubeUrl.trim() || null,
           spotifyUrl: spotifyUrl.trim() || null,
           soundcloudUrl: soundcloudUrl.trim() || null,
@@ -167,6 +170,17 @@ export function ProfileEditForm({ profileId, initial }: ProfileEditFormProps) {
             value={instagramUrl}
             onChange={(e) => setInstagramUrl(e.target.value)}
             placeholder="https://instagram.com/yourhandle"
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label className={labelClass}>Facebook</label>
+          <input
+            type="url"
+            value={facebookUrl}
+            onChange={(e) => setFacebookUrl(e.target.value)}
+            placeholder="https://facebook.com/yourpage"
             className={inputClass}
           />
         </div>

@@ -42,10 +42,10 @@ export async function PATCH(
 
   const body = await req.json();
   const { name, bio, artistType, location, availabilityStatus, avatarUrl, bannerUrl,
-    instagramUrl, spotifyUrl, soundcloudUrl, youtubeUrl, websiteUrl } = body;
+    instagramUrl, facebookUrl, spotifyUrl, soundcloudUrl, youtubeUrl, websiteUrl } = body;
   const updated = await updateProfile(profileId, {
     name, bio, artistType, location, availabilityStatus, avatarUrl, bannerUrl,
-    instagramUrl, spotifyUrl, soundcloudUrl, youtubeUrl, websiteUrl,
+    instagramUrl, facebookUrl, spotifyUrl, soundcloudUrl, youtubeUrl, websiteUrl,
   });
   return NextResponse.json(updated);
 }

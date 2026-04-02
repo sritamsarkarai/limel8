@@ -68,6 +68,7 @@ model Profile {
   availabilityStatus AvailabilityStatus @default(not_available)
   // Social links
   instagramUrl       String?
+  facebookUrl        String?
   spotifyUrl         String?
   soundcloudUrl      String?
   youtubeUrl         String?
