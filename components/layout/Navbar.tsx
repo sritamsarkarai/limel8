@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 type Profile = { id: string; name: string; avatarUrl?: string | null };
 
@@ -29,25 +30,7 @@ export function Navbar({ profile }: { profile: Profile | null }) {
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
       </Link>
-      {profile && (
-        <Link
-          href={`/profile/p_${profile.id}`}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          {profile.avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={profile.avatarUrl}
-              alt={profile.name}
-              className="w-8 h-8 rounded-full object-cover border-2 border-cyan-500/40 shadow-[0_0_8px_rgba(34,211,238,0.2)]"
-            />
-          ) : (
-            <span className="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-500/40 text-cyan-400 flex items-center justify-center text-sm font-semibold shadow-[0_0_8px_rgba(34,211,238,0.2)]">
-              {profile.name?.[0]?.toUpperCase() ?? "?"}
-            </span>
-          )}
-        </Link>
-      )}
+      {profile && <ProfileDropdown profile={profile} />}
     </nav>
   );
 }
