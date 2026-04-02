@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { AvailabilityBadge } from "./AvailabilityBadge";
+import { PostComposer } from "@/components/feed/PostComposer";
+import { PostCard } from "@/components/feed/PostCard";
 
 type SocialLinks = {
   instagramUrl?: string | null;
@@ -22,6 +24,7 @@ type Post = {
   id: string;
   content: string;
   createdAt: Date;
+  mediaUrls?: string[];
 };
 
 type Profile = {
@@ -71,8 +74,7 @@ const SOCIAL_ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
-export function IndividualProfileView({ profile, currentProfileId }: { profile: Profile; currentProfileId?: string | null }) {
-  const socialLinks = [
+export function IndividualProfileView({ profile, currentProfileId }: { profile: Profile; currentProfileId?: string | null }) {  const socialLinks = [
     { label: "Instagram", url: profile.instagramUrl },
     { label: "Facebook", url: profile.facebookUrl },
     { label: "Spotify", url: profile.spotifyUrl },
@@ -188,21 +190,29 @@ export function IndividualProfileView({ profile, currentProfileId }: { profile: 
       )}
 
       {/* Posts */}
-      {profile.posts && profile.posts.length > 0 && (
-        <div>
-          <h2 className="text-base font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>Posts</h2>
-          <ul className="space-y-3">
+      <div>
+        <h2 className="text-base font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>Posts</h2>
+        {currentProfileId === profile.id && (
+          <div className="mb-4">
+            <PostComposer />
+          </div>
+        )}
+        {profile.posts && profile.posts.length > 0 ? (
+          <div className="space-y-3">
             {profile.posts.map((post) => (
-              <li key={post.id} className="border border-cyan-500/[0.27] bg-zinc-900 rounded-xl p-4 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]">
-                <p className="text-zinc-300 whitespace-pre-wrap text-sm leading-relaxed">{post.content}</p>
-                <p className="text-xs text-zinc-600 mt-2">
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </p>
-              </li>
+              <PostCard
+                key={post.id}
+                post={{
+                  ...post,
+                  profile: { name: profile.name, avatarUrl: profile.avatarUrl },
+                }}
+              />
             ))}
-          </ul>
-        </div>
-      )}
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-500">No posts yet.</p>
+        )}
+      </div>
     </div>
   );
 }
