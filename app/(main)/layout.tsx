@@ -14,9 +14,9 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar profile={profile} />
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         <Sidebar profile={profile} />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 md:p-6 pb-20 md:pb-6 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

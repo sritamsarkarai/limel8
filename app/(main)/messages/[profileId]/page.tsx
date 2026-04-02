@@ -162,7 +162,7 @@ export default function ConversationPage({
   }
 
   return (
-    <main className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-4">
+    <main className="mx-auto flex h-[calc(100vh-4rem-56px)] md:h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-4">
       <div className="flex-1 overflow-y-auto pb-4">
         {messages.length === 0 ? (
           <p className="py-8 text-center text-zinc-500">
