@@ -23,7 +23,7 @@ export function ConversationList({ conversations, currentProfileId }: Conversati
   }
 
   return (
-    <ul className="divide-y divide-zinc-800">
+    <ul className="divide-y divide-zinc-800 rounded-xl border border-cyan-500/[0.27] bg-zinc-900 overflow-hidden shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_20px_rgba(34,211,238,0.13),0_0_40px_rgba(34,211,238,0.05)]">
       {conversations.map((convo) => {
         const otherProfile =
           convo.sender.id === currentProfileId ? convo.recipient : convo.sender;
@@ -39,10 +39,10 @@ export function ConversationList({ conversations, currentProfileId }: Conversati
                 <img
                   src={otherProfile.avatarUrl}
                   alt={otherProfile.name}
-                  className="h-10 w-10 rounded-full object-cover border border-zinc-600"
+                  className="h-10 w-10 rounded-full object-cover border-2 border-cyan-500/40 shadow-[0_0_8px_rgba(34,211,238,0.15)]"
                 />
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-950 border border-cyan-500/25 text-sm font-semibold text-cyan-400">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-950 border border-cyan-500/40 text-sm font-semibold text-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.15)]">
                   {otherProfile.name.charAt(0).toUpperCase()}
                 </div>
               )}

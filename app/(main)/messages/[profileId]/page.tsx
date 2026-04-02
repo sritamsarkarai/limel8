@@ -165,7 +165,7 @@ export default function ConversationPage({
     <main className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 py-4">
       <div className="flex-1 overflow-y-auto pb-4">
         {messages.length === 0 ? (
-          <p className="py-8 text-center text-gray-500">
+          <p className="py-8 text-center text-zinc-500">
             No messages yet. Say hello!
           </p>
         ) : (
@@ -180,19 +180,19 @@ export default function ConversationPage({
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSend} className="flex gap-2 border-t border-gray-200 pt-4">
+      <form onSubmit={handleSend} className="flex gap-2 border-t border-cyan-500/10 pt-4">
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 rounded-lg border border-cyan-500/[0.27] bg-zinc-800 px-4 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-cyan-500/[0.4] focus:outline-none shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)] focus:shadow-[0_0_0_1px_rgba(34,211,238,0.27),0_0_20px_rgba(34,211,238,0.16)]"
           disabled={sending}
         />
         <button
           type="submit"
           disabled={sending || !newMessage.trim()}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-lg bg-gradient-to-r from-cyan-400 to-violet-400 px-4 py-2 text-sm font-bold text-zinc-950 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity shadow-[0_0_12px_rgba(34,211,238,0.2)]"
         >
           Send
         </button>
