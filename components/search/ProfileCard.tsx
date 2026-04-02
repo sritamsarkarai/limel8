@@ -16,7 +16,7 @@ export function ProfileCard({ profile }: ProfileCardProps) {
   return (
     <Link
       href={`/profile/p_${profile.id}`}
-      className="block rounded-xl border border-zinc-700 bg-zinc-800 p-4 hover:border-cyan-500/50 transition-all duration-200 cursor-pointer"
+      className="block rounded-xl border border-cyan-500/[0.27] bg-zinc-900 p-4 hover:border-cyan-500/[0.4] hover:-translate-y-0.5 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_20px_rgba(34,211,238,0.13),0_0_40px_rgba(34,211,238,0.05)] hover:shadow-[0_0_0_1px_rgba(34,211,238,0.27),0_0_20px_rgba(34,211,238,0.16),0_0_40px_rgba(34,211,238,0.06)] transition-all duration-200 cursor-pointer"
     >
       <div className="flex items-start gap-4">
         {profile.avatarUrl ? (
@@ -24,10 +24,10 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           <img
             src={profile.avatarUrl}
             alt={profile.name}
-            className="h-14 w-14 rounded-full object-cover flex-shrink-0 border-2 border-zinc-600"
+            className="h-14 w-14 rounded-full object-cover flex-shrink-0 border-2 border-cyan-500/40 shadow-[0_0_8px_rgba(34,211,238,0.2)]"
           />
         ) : (
-          <div className="h-14 w-14 rounded-full bg-cyan-950 border border-cyan-500/25 flex items-center justify-center flex-shrink-0">
+          <div className="h-14 w-14 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center flex-shrink-0 shadow-[0_0_8px_rgba(34,211,238,0.2)]">
             <span className="text-xl font-semibold text-cyan-400">
               {profile.name.charAt(0).toUpperCase()}
             </span>

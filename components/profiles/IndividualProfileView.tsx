@@ -84,7 +84,7 @@ export function IndividualProfileView({ profile, currentProfileId }: { profile: 
             {currentProfileId === profile.id && (
               <Link
                 href="/settings/profile"
-                className="text-xs font-medium text-zinc-400 hover:text-white border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 px-3 py-1 rounded-lg transition-colors duration-200 cursor-pointer"
+                className="text-xs font-bold text-zinc-950 bg-gradient-to-r from-cyan-400 to-violet-400 px-3 py-1 rounded-lg transition-opacity hover:opacity-90 cursor-pointer shadow-[0_0_8px_rgba(34,211,238,0.2)]"
               >
                 Edit Profile
               </Link>
@@ -121,7 +121,7 @@ export function IndividualProfileView({ profile, currentProfileId }: { profile: 
                   href={url!}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium text-cyan-400 hover:text-cyan-300 border border-zinc-700 bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors duration-200 cursor-pointer"
+                  className="text-xs font-medium text-cyan-400 hover:text-cyan-300 border border-cyan-500/[0.27] bg-zinc-900 px-3 py-1.5 rounded-lg shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_8px_rgba(34,211,238,0.08)] transition-colors duration-200 cursor-pointer"
                 >
                   {label}
                 </a>
@@ -139,7 +139,7 @@ export function IndividualProfileView({ profile, currentProfileId }: { profile: 
             {profile.listings.map((listing) => (
               <li
                 key={listing.id}
-                className="border border-zinc-700 bg-zinc-800 rounded-xl p-3 space-y-1"
+                className="border border-cyan-500/[0.27] bg-zinc-900 rounded-xl p-3 space-y-1 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]"
               >
                 <p className="font-medium text-white text-sm">{listing.title}</p>
                 <p className="text-xs text-zinc-500 capitalize">{listing.type}</p>
@@ -156,7 +156,7 @@ export function IndividualProfileView({ profile, currentProfileId }: { profile: 
           <h2 className="text-base font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>Posts</h2>
           <ul className="space-y-3">
             {profile.posts.map((post) => (
-              <li key={post.id} className="border border-zinc-700 bg-zinc-800 rounded-xl p-4">
+              <li key={post.id} className="border border-cyan-500/[0.27] bg-zinc-900 rounded-xl p-4 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]">
                 <p className="text-zinc-300 whitespace-pre-wrap text-sm leading-relaxed">{post.content}</p>
                 <p className="text-xs text-zinc-600 mt-2">
                   {new Date(post.createdAt).toLocaleDateString()}
