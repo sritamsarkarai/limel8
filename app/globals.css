@@ -20,6 +20,10 @@
   --accent-subtle: #083344;
   --accent-muted:  rgba(6,182,212,0.25);
 
+  /* Accent — Violet */
+  --violet:        #a78bfa;
+  --violet-subtle: #1e1b4b;
+
   /* Text */
   --text-primary: #fafafa;
   --text-muted:   #a1a1aa;

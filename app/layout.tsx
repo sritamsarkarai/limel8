@@ -17,7 +17,19 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-full flex flex-col bg-zinc-950 text-white">{children}</body>
+      <body className="relative min-h-full flex flex-col bg-zinc-950 text-white overflow-x-hidden">
+        {/* Cyan bloom — top-left */}
+        <div
+          className="pointer-events-none fixed top-0 left-0 w-[600px] h-[600px] -translate-x-1/3 -translate-y-1/3"
+          style={{ background: "radial-gradient(ellipse at center, rgba(34,211,238,0.04) 0%, transparent 70%)" }}
+        />
+        {/* Violet bloom — bottom-right */}
+        <div
+          className="pointer-events-none fixed bottom-0 right-0 w-[600px] h-[600px] translate-x-1/3 translate-y-1/3"
+          style={{ background: "radial-gradient(ellipse at center, rgba(167,139,250,0.04) 0%, transparent 70%)" }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
