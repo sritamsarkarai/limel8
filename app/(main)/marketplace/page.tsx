@@ -13,19 +13,24 @@ export default async function MarketplacePage({
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Marketplace</h1>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent" style={{ fontFamily: "var(--font-heading)" }}>
+          Marketplace
+        </h1>
         <Link
           href="/marketplace/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-lg bg-gradient-to-r from-cyan-400 to-violet-400 px-4 py-2 text-sm font-bold text-zinc-950 shadow-[0_0_20px_rgba(34,211,238,0.2),0_4px_12px_rgba(34,211,238,0.13)] hover:opacity-90 transition-opacity"
         >
           + New Listing
         </Link>
       </div>
 
       {listings.length === 0 ? (
-        <p className="text-center text-gray-500 py-16">
-          No listings yet. Be the first to list something!
-        </p>
+        <div className="py-16 text-center relative">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div style={{ background: "radial-gradient(ellipse at center, rgba(34,211,238,0.06) 0%, transparent 60%)", width: 400, height: 400 }} />
+          </div>
+          <p className="relative text-zinc-400">No listings yet. Be the first to list something!</p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {listings.map((listing: (typeof listings)[number]) => (
@@ -38,7 +43,7 @@ export default async function MarketplacePage({
         <div className="mt-8 flex justify-center">
           <Link
             href={`/marketplace?cursor=${listings[listings.length - 1].id}`}
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-lg border border-cyan-500/[0.27] px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:border-cyan-500/[0.4] shadow-[0_0_0_1px_rgba(34,211,238,0.13)] transition-all"
           >
             Load more
           </Link>
