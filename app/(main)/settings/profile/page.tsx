@@ -14,12 +14,12 @@ export default async function EditProfilePage() {
   return (
     <main className="mx-auto max-w-xl px-4 py-8">
       <h1
-        className="mb-6 text-2xl font-bold text-white"
+        className="mb-6 text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent"
         style={{ fontFamily: "var(--font-heading)" }}
       >
         Edit Profile
       </h1>
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+      <div className="rounded-2xl border border-cyan-500/[0.27] bg-zinc-900 p-6 shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_20px_rgba(34,211,238,0.13),0_0_40px_rgba(34,211,238,0.05)]">
         <ProfileEditForm
           profileId={profile.id}
           initial={{

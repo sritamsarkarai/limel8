@@ -9,6 +9,8 @@ const AVAILABILITY_OPTIONS = [
   { value: "not_available", label: "Not Available" },
 ];
 
+const inputClass = "rounded-lg border border-cyan-500/[0.27] bg-zinc-800 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-cyan-500/[0.4] focus:outline-none shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)] focus:shadow-[0_0_0_1px_rgba(34,211,238,0.27),0_0_20px_rgba(34,211,238,0.16)]";
+
 export default async function SearchPage({
   searchParams,
 }: {
@@ -25,7 +27,9 @@ export default async function SearchPage({
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Discover Artists</h1>
+      <h1 className="mb-6 text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent" style={{ fontFamily: "var(--font-heading)" }}>
+        Discover Artists
+      </h1>
 
       <form method="get" action="/search" className="mb-8 space-y-4">
         <div className="flex gap-2">
@@ -34,11 +38,11 @@ export default async function SearchPage({
             name="query"
             defaultValue={query ?? ""}
             placeholder="Search by name, bio, or artist type..."
-            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`flex-1 ${inputClass}`}
           />
           <button
             type="submit"
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-lg bg-gradient-to-r from-cyan-400 to-violet-400 px-4 py-2 text-sm font-bold text-zinc-950 shadow-[0_0_20px_rgba(34,211,238,0.2),0_4px_12px_rgba(34,211,238,0.13)] hover:opacity-90 transition-opacity"
           >
             Search
           </button>
@@ -50,13 +54,13 @@ export default async function SearchPage({
             name="artistType"
             defaultValue={artistType ?? ""}
             placeholder="Artist type (e.g. guitarist)"
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
 
           <select
             name="availability"
             defaultValue={availability ?? ""}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`${inputClass} cursor-pointer bg-zinc-800`}
           >
             {AVAILABILITY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -70,13 +74,13 @@ export default async function SearchPage({
             name="location"
             defaultValue={location ?? ""}
             placeholder="Location"
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
       </form>
 
       {profiles.length === 0 ? (
-        <p className="text-center text-gray-500">No profiles found. Try adjusting your search filters.</p>
+        <p className="text-center text-zinc-500">No profiles found. Try adjusting your search filters.</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {profiles.map((profile: (typeof profiles)[number]) => (

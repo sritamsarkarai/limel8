@@ -96,22 +96,6 @@ export function Sidebar({ profile }: { profile: Profile | null }) {
             </svg>
             My Profile
           </Link>
-          <Link
-            href="/settings/profile"
-            className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors duration-200 cursor-pointer ${
-              pathname === "/settings/profile"
-                ? "bg-cyan-950/40 text-cyan-400 border border-cyan-500/[0.27] shadow-[0_0_0_1px_rgba(34,211,238,0.13),0_0_12px_rgba(34,211,238,0.08)]"
-                : "text-zinc-400 hover:bg-zinc-800 hover:text-white border border-transparent"
-            }`}
-          >
-            {pathname === "/settings/profile" && (
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-3/5 bg-cyan-400 rounded-r shadow-[0_0_6px_#22d3ee]" />
-            )}
-            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-            Edit Profile
-          </Link>
         </>
       )}
     </aside>

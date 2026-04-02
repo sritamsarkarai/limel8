@@ -44,6 +44,7 @@ export function ListingForm() {
         return;
       }
 
+      router.refresh();
       router.push("/marketplace");
     } catch {
       setError("An unexpected error occurred");
