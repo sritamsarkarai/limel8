@@ -42,7 +42,7 @@ export function Navbar({ profile }: { profile: Profile | null }) {
               className="w-8 h-8 rounded-full object-cover border-2 border-cyan-500/40 shadow-[0_0_8px_rgba(34,211,238,0.2)]"
             />
           ) : (
-            <span className="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-sm font-semibold shadow-[0_0_8px_rgba(34,211,238,0.2)]">
+            <span className="w-8 h-8 rounded-full bg-cyan-950 border-2 border-cyan-500/40 text-cyan-400 flex items-center justify-center text-sm font-semibold shadow-[0_0_8px_rgba(34,211,238,0.2)]">
               {profile.name?.[0]?.toUpperCase() ?? "?"}
             </span>
           )}
