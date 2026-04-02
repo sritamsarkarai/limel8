@@ -56,14 +56,12 @@ export default function LoginPage() {
         className="w-full max-w-md rounded-2xl bg-zinc-900 border border-zinc-800 p-8"
         style={{ animation: "fadeUp 500ms cubic-bezier(0.16,1,0.3,1) 100ms both" }}
       >
-        <div style={{ animation: "fadeUp 500ms cubic-bezier(0.16,1,0.3,1) 0ms both" }}>
-          <h1
-            className="mb-6 text-2xl font-bold text-white"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Sign in to Lime<span className="text-cyan-400">L8</span>
-          </h1>
-        </div>
+        <h1
+          className="mb-6 text-2xl font-bold text-white"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          Sign in to Lime<span className="text-cyan-400">L8</span>
+        </h1>
 
         {error && (
           <div className="mb-4 rounded-lg bg-red-950 border border-red-800 p-3 text-sm text-red-400">
