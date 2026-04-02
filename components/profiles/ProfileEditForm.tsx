@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const AVAILABILITY_OPTIONS = [
@@ -18,6 +18,8 @@ interface ProfileEditFormProps {
     artistType?: string | null;
     location?: string | null;
     availabilityStatus: string;
+    avatarUrl?: string | null;
+    bannerUrl?: string | null;
     instagramUrl?: string | null;
     facebookUrl?: string | null;
     youtubeUrl?: string | null;
@@ -38,12 +40,38 @@ export function ProfileEditForm({ profileId, initial }: ProfileEditFormProps) {
   const [artistType, setArtistType] = useState(initial.artistType ?? "");
   const [location, setLocation] = useState(initial.location ?? "");
   const [availabilityStatus, setAvailabilityStatus] = useState(initial.availabilityStatus ?? "not_available");
+  const [avatarUrl, setAvatarUrl] = useState(initial.avatarUrl ?? "");
+  const [bannerUrl, setBannerUrl] = useState(initial.bannerUrl ?? "");
   const [instagramUrl, setInstagramUrl] = useState(initial.instagramUrl ?? "");
   const [facebookUrl, setFacebookUrl] = useState(initial.facebookUrl ?? "");
   const [youtubeUrl, setYoutubeUrl] = useState(initial.youtubeUrl ?? "");
   const [spotifyUrl, setSpotifyUrl] = useState(initial.spotifyUrl ?? "");
   const [soundcloudUrl, setSoundcloudUrl] = useState(initial.soundcloudUrl ?? "");
   const [websiteUrl, setWebsiteUrl] = useState(initial.websiteUrl ?? "");
+
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [bannerUploading, setBannerUploading] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+
+  async function uploadImage(file: File, kind: "avatar" | "banner") {
+    const setter = kind === "avatar" ? setAvatarUploading : setBannerUploading;
+    setter(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("kind", kind);
+      const res = await fetch("/api/upload/profile-image", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Upload failed");
+      if (kind === "avatar") setAvatarUrl(data.url);
+      else setBannerUrl(data.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setter(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,6 +89,8 @@ export function ProfileEditForm({ profileId, initial }: ProfileEditFormProps) {
           artistType: artistType.trim() || null,
           location: location.trim() || null,
           availabilityStatus,
+          avatarUrl: avatarUrl || null,
+          bannerUrl: bannerUrl || null,
           instagramUrl: instagramUrl.trim() || null,
           facebookUrl: facebookUrl.trim() || null,
           youtubeUrl: youtubeUrl.trim() || null,
@@ -96,6 +126,66 @@ export function ProfileEditForm({ profileId, initial }: ProfileEditFormProps) {
       {success && (
         <div className="rounded-lg bg-green-950 border border-green-800 p-3 text-sm text-green-400">Profile saved successfully.</div>
       )}
+
+      {/* Photos */}
+      <div className="space-y-4">
+        <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Photos</h2>
+
+        {/* Cover photo */}
+        <div>
+          <label className={labelClass}>Cover Photo</label>
+          <div
+            className="mt-1 relative h-28 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 cursor-pointer group"
+            onClick={() => bannerInputRef.current?.click()}
+          >
+            {bannerUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={bannerUrl} alt="Cover" className="w-full h-full object-cover" />
+            ) : (
+              <div className="flex h-full items-center justify-center text-zinc-600 text-sm">Click to upload</div>
+            )}
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-sm font-medium">
+              {bannerUploading ? "Uploading…" : "Change cover"}
+            </div>
+          </div>
+          <input
+            ref={bannerInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f, "banner"); }}
+          />
+        </div>
+
+        {/* Avatar */}
+        <div>
+          <label className={labelClass}>Profile Picture</label>
+          <div className="mt-1 flex items-center gap-4">
+            <div
+              className="relative w-20 h-20 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700 cursor-pointer group flex-shrink-0"
+              onClick={() => avatarInputRef.current?.click()}
+            >
+              {avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <div className="flex h-full items-center justify-center text-zinc-600 text-xs">Photo</div>
+              )}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-medium">
+                {avatarUploading ? "…" : "Change"}
+              </div>
+            </div>
+            <p className="text-xs text-zinc-500">Click the circle to upload. Max 5 MB.</p>
+          </div>
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f, "avatar"); }}
+          />
+        </div>
+      </div>
 
       {/* Basic info */}
       <div className="space-y-4">

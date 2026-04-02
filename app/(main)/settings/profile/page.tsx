@@ -28,6 +28,8 @@ export default async function EditProfilePage() {
             artistType: profile.artistType,
             location: profile.location,
             availabilityStatus: profile.availabilityStatus,
+            avatarUrl: profile.avatarUrl,
+            bannerUrl: profile.bannerUrl,
             instagramUrl: profile.instagramUrl,
             facebookUrl: profile.facebookUrl,
             youtubeUrl: profile.youtubeUrl,
