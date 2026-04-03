@@ -52,7 +52,7 @@ export function ServiceForm({ orgId, onCreated }: ServiceFormProps) {
       </div>
       <div>
         <label className={labelClass}>Description</label>
-        <input value={description} onChange={(e) => setDescription(e.target.value)} className={inputClass} placeholder="What&apos;s included?" />
+        <input value={description} onChange={(e) => setDescription(e.target.value)} className={inputClass} placeholder="What's included?" />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
