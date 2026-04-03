@@ -82,16 +82,18 @@ model Profile {
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
-  posts            Post[]
-  listings         Listing[]
-  ordersAsBuyer    Order[]          @relation("buyer")
-  ordersAsSeller   Order[]          @relation("seller")
-  messagesSent     Message[]        @relation("sender")
-  messagesReceived Message[]        @relation("recipient")
-  groupsAdmin      Group[]          @relation("admin")
-  groupMemberships GroupMember[]
-  following        Follow[]         @relation("follower")
-  followedBy       Follow[]         @relation("followedProfile")
+  posts              Post[]
+  listings           Listing[]
+  ordersAsBuyer      Order[]          @relation("buyer")
+  ordersAsSeller     Order[]          @relation("seller")
+  messagesSent       Message[]        @relation("sender")
+  messagesReceived   Message[]        @relation("recipient")
+  groupsAdmin        Group[]          @relation("admin")
+  groupMemberships   GroupMember[]
+  following          Follow[]         @relation("follower")
+  followedBy         Follow[]         @relation("followedProfile")
+  ownedOrgs          Organization[]   @relation("ownedOrgs")
+  bookingsAsCustomer Booking[]        @relation("bookingsAsCustomer")
 }
 
 enum AvailabilityStatus {
@@ -256,4 +258,77 @@ model Message {
 
   @@index([senderId, recipientId])
   @@index([createdAt])
+}
+
+// ─── Organizations + Bookings ───────────────────────────────────────
+
+enum BookingStatus {
+  pending
+  confirmed
+  declined
+  cancelled
+}
+
+enum OrgCategory {
+  studio
+  dance_school
+  vocal_school
+  music_school
+  photography_studio
+  recording_studio
+  rehearsal_space
+  event_venue
+  other
+}
+
+model Organization {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  category    OrgCategory
+  description String?     @db.Text
+  avatarUrl   String?
+  bannerUrl   String?
+  ownerId     String
+  owner       Profile     @relation("ownedOrgs", fields: [ownerId], references: [id], onDelete: Cascade)
+  services    Service[]
+  bookings    Booking[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([ownerId])
+}
+
+model Service {
+  id           String       @id @default(cuid())
+  orgId        String
+  org          Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?      @db.Text
+  price        Decimal?     @db.Decimal(10, 2)
+  duration     String?
+  bookings     Booking[]
+  createdAt    DateTime     @default(now())
+
+  @@index([orgId])
+}
+
+model Booking {
+  id                      String        @id @default(cuid())
+  serviceId               String
+  service                 Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  orgId                   String
+  org                     Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  customerId              String
+  customer                Profile       @relation("bookingsAsCustomer", fields: [customerId], references: [id], onDelete: Cascade)
+  requestedDate           String
+  message                 String?       @db.Text
+  status                  BookingStatus @default(pending)
+  stripePaymentIntentId   String?
+  stripeCheckoutSessionId String?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  @@index([orgId, status])
+  @@index([customerId])
 }
