@@ -4,7 +4,7 @@ import { useState } from "react";
 
 type ServiceFormProps = {
   orgId: string;
-  onCreated: (service: { id: string; name: string; price: string | null; duration: string | null }) => void;
+  onCreated?: (service: { id: string; name: string; price: string | null; duration: string | null }) => void;
 };
 
 export function ServiceForm({ orgId, onCreated }: ServiceFormProps) {
@@ -32,7 +32,7 @@ export function ServiceForm({ orgId, onCreated }: ServiceFormProps) {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Failed"); return; }
-      onCreated(data);
+      if (onCreated) onCreated(data);
       setName(""); setDescription(""); setPrice(""); setDuration("");
     } finally {
       setLoading(false);

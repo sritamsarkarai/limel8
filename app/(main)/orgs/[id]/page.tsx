@@ -64,7 +64,7 @@ export default async function OrgDashboardPage({
             ))}
           </div>
         )}
-        <ServiceForm orgId={org.id} onCreated={() => {}} />
+        <ServiceForm orgId={org.id} />
       </section>
 
       {/* Bookings */}
