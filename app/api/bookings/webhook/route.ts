@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { updateBookingStatus } from "@/modules/organizations/mutations";
+import { getBookingById } from "@/modules/organizations/queries";
+import { createMessage } from "@/modules/messaging/mutations";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +30,16 @@ export async function POST(req: Request) {
         stripeCheckoutSessionId: session.id,
         stripePaymentIntentId: typeof session.payment_intent === "string" ? session.payment_intent : undefined,
       });
+
+      // Notify customer via in-app message
+      const booking = await getBookingById(bookingId);
+      if (booking) {
+        await createMessage({
+          senderId: booking.org.ownerId,
+          recipientId: booking.customerId,
+          content: `Your booking for "${booking.service.name}" has been confirmed and payment received! Requested date: ${booking.requestedDate}`,
+        });
+      }
     }
   }
 

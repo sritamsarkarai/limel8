@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ServiceFormProps = {
   orgId: string;
@@ -8,6 +9,7 @@ type ServiceFormProps = {
 };
 
 export function ServiceForm({ orgId, onCreated }: ServiceFormProps) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -33,6 +35,7 @@ export function ServiceForm({ orgId, onCreated }: ServiceFormProps) {
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Failed"); return; }
       if (onCreated) onCreated(data);
+      router.refresh();
       setName(""); setDescription(""); setPrice(""); setDuration("");
     } finally {
       setLoading(false);
