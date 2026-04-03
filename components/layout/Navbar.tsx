@@ -22,7 +22,7 @@ export function Navbar({ profile }: { profile: Profile | null }) {
       {/* Hamburger — toggles sidebar */}
       <button
         onClick={() => sidebarToggle?.()}
-        className="w-9 h-9 flex items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer shrink-0"
+        className="hidden md:flex w-9 h-9 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer shrink-0"
         aria-label="Toggle sidebar"
       >
         <HamburgerIcon />
