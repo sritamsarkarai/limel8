@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ProgressBar } from "@/components/layout/ProgressBar";
 
 export const metadata: Metadata = {
   title: "LimeL8",
@@ -18,6 +19,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="relative min-h-full flex flex-col bg-zinc-950 text-white overflow-x-hidden">
+        <ProgressBar />
         {/* Cyan bloom — top-left */}
         <div
           className="pointer-events-none fixed top-0 left-0 w-[600px] h-[600px] -translate-x-1/3 -translate-y-1/3"
