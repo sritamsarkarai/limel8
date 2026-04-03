@@ -1,7 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
 import { BookingStatus, OrgCategory } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/client";
 
 export async function createOrg(data: {
   slug: string;
@@ -40,7 +39,7 @@ export async function createService(data: {
   return db.service.create({
     data: {
       ...data,
-      price: data.price != null ? new Decimal(data.price) : null,
+      price: data.price != null ? data.price : null,
     },
   });
 }
@@ -54,13 +53,12 @@ export async function updateService(
     duration?: string;
   }
 ) {
-  return db.service.update({
-    where: { id },
-    data: {
-      ...data,
-      price: data.price != null ? new Decimal(data.price) : null,
-    },
-  });
+  const updateData: Record<string, unknown> = {};
+  if (data.name !== undefined) updateData.name = data.name;
+  if (data.description !== undefined) updateData.description = data.description;
+  if (data.price !== undefined) updateData.price = data.price;
+  if (data.duration !== undefined) updateData.duration = data.duration;
+  return db.service.update({ where: { id }, data: updateData });
 }
 
 export async function deleteService(id: string) {

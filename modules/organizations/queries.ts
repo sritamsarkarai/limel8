@@ -37,6 +37,7 @@ export async function getBookingsForOrg(orgId: string) {
       customer: { select: { id: true, name: true, avatarUrl: true } },
     },
     orderBy: { createdAt: "desc" },
+    take: 50,
   });
 }
 
