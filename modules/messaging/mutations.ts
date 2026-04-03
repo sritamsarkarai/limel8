@@ -18,6 +18,20 @@ export async function sendMessage(senderId: string, recipientId: string, content
   return message;
 }
 
+export async function createMessage({
+  senderId,
+  recipientId,
+  content,
+}: {
+  senderId: string;
+  recipientId: string;
+  content: string;
+}) {
+  return db.message.create({
+    data: { senderId, recipientId, content },
+  });
+}
+
 export async function markThreadRead(profileId: string, otherProfileId: string) {
   return db.message.updateMany({
     where: { senderId: otherProfileId, recipientId: profileId, read: false },
