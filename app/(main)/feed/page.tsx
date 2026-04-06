@@ -28,7 +28,7 @@ export default async function FeedPage() {
       ) : (
         <div className="flex flex-col gap-4">
           {posts.map((post: (typeof posts)[number]) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} currentProfileId={profile.id} />
           ))}
         </div>
       )}

@@ -26,6 +26,15 @@ export async function getListingWithDownloadId(id: string) {
   return db.listing.findUnique({ where: { id }, include: { seller: true } });
 }
 
+export async function getListingsBySeller(sellerId: string) {
+  return db.listing.findMany({
+    where: { sellerId },
+    orderBy: { createdAt: "desc" },
+    omit: { cloudinaryDownloadId: true },
+    include: { seller: true },
+  });
+}
+
 export async function getOrdersForBuyer(buyerId: string) {
   return db.order.findMany({ where: { buyerId }, include: { listing: true }, orderBy: { createdAt: "desc" } });
 }

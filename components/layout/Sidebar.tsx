@@ -89,6 +89,20 @@ const MAIN_LINKS: NavItem[] = [
 
 const SECONDARY_LINKS: NavItem[] = [
   {
+    href: "/listings",
+    label: "My Listings",
+    icon: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1" ry="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
+      </svg>
+    ),
+    iconActive: (
+      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M19 3h-4.184A3.001 3.001 0 0 0 12 1a3.001 3.001 0 0 0-2.816 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-2 14H7v-2h3v2zm3-4H7v-2h6v2zm3-4H7V7h9v2z"/>
+      </svg>
+    ),
+  },
+  {
     href: "/settings/subscription",
     label: "Subscription",
     icon: (

@@ -204,8 +204,9 @@ export function IndividualProfileView({ profile, currentProfileId }: { profile: 
                 key={post.id}
                 post={{
                   ...post,
-                  profile: { name: profile.name, avatarUrl: profile.avatarUrl },
+                  profile: { name: profile.name, avatarUrl: profile.avatarUrl, id: profile.id },
                 }}
+                currentProfileId={currentProfileId}
               />
             ))}
           </div>

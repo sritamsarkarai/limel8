@@ -5,6 +5,13 @@ export async function createPost(data: { profileId?: string; groupId?: string; c
   return db.post.create({ data, include: { profile: true, group: true } });
 }
 
+export async function updatePost(postId: string, requestorProfileId: string, content: string) {
+  const post = await db.post.findUnique({ where: { id: postId } });
+  if (!post) throw new Error("Post not found");
+  if (post.profileId !== requestorProfileId) throw new Error("Unauthorized");
+  return db.post.update({ where: { id: postId }, data: { content } });
+}
+
 export async function deletePost(postId: string, requestorProfileId: string) {
   const post = await db.post.findUnique({ where: { id: postId } });
   if (!post) throw new Error("Post not found");
