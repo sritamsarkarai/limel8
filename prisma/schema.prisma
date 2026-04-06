@@ -196,6 +196,7 @@ model Listing {
   previewMediaUrls     String[]
   cloudinaryDownloadId String?
   stockQuantity        Int?
+  location             String?
   status               ListingStatus @default(draft)
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt

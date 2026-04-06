@@ -7,6 +7,7 @@ import { getListing } from "@/modules/marketplace/queries";
 import { getProfileByUserId } from "@/modules/profiles/queries";
 import { BuyButton } from "@/components/marketplace/BuyButton";
 import { ConnectStripeButton } from "@/components/marketplace/ConnectStripeButton";
+import { ListingOwnerActions } from "@/components/marketplace/ListingOwnerActions";
 
 export default async function ListingPage({
   params,
@@ -20,18 +21,31 @@ export default async function ListingPage({
 
   if (!listing) return notFound();
 
+  const isOwner = viewerProfile?.id === listing.sellerId;
   const priceDisplay = listing.price.toString();
   const isSellerWithNoBankAccount =
-    viewerProfile?.id === listing.sellerId &&
+    isOwner &&
     listing.status === "draft" &&
     !listing.seller.stripeAccountId;
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
-      <div className="mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <Link href="/marketplace" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
           &larr; Back to Marketplace
         </Link>
+        {isOwner && (
+          <ListingOwnerActions
+            listingId={listing.id}
+            initialTitle={listing.title}
+            initialDescription={listing.description}
+            initialPrice={priceDisplay}
+            initialLocation={listing.location ?? ""}
+            initialStockQuantity={listing.stockQuantity ?? undefined}
+            listingType={listing.type}
+            listingStatus={listing.status}
+          />
+        )}
       </div>
 
       {listing.previewMediaUrls.length > 0 && (
@@ -73,6 +87,15 @@ export default async function ListingPage({
           <span>Sold by <strong>{listing.seller.name}</strong></span>
         </div>
 
+        {listing.location && (
+          <div className="flex items-center gap-1.5 text-sm text-zinc-400">
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            {listing.location}
+          </div>
+        )}
+
         <p className="text-zinc-300 whitespace-pre-wrap leading-relaxed">{listing.description}</p>
 
         {listing.type === "digital" && (
@@ -87,7 +110,7 @@ export default async function ListingPage({
           </p>
         )}
 
-        {listing.status === "active" && (
+        {listing.status === "active" && !isOwner && (
           <BuyButton listingId={listing.id} />
         )}
 
@@ -98,6 +121,8 @@ export default async function ListingPage({
         {listing.status === "draft" && (
           isSellerWithNoBankAccount ? (
             <ConnectStripeButton />
+          ) : isOwner ? (
+            <p className="text-sm font-medium text-zinc-500">This listing is a draft — not yet published.</p>
           ) : (
             <p className="text-sm font-medium text-zinc-500">This listing is not yet published.</p>
           )

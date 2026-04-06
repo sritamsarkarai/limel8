@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const cursor = searchParams.get("cursor") ?? undefined;
-    const listings = await getListings(cursor);
+    const listings = await getListings({ cursor });
     return NextResponse.json(listings);
   } catch (err) {
     console.error(err);
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { title, description, price, type, previewMediaUrls, cloudinaryDownloadId, stockQuantity } = body;
+    const { title, description, price, type, previewMediaUrls, cloudinaryDownloadId, stockQuantity, location } = body;
 
     if (!title || !description || price == null || !type) {
       return NextResponse.json({ error: "Missing required fields: title, description, price, type" }, { status: 400 });
@@ -50,6 +50,7 @@ export async function POST(req: Request) {
       previewMediaUrls,
       cloudinaryDownloadId,
       stockQuantity,
+      location,
     });
     return NextResponse.json(listing, { status: 201 });
   } catch (err) {

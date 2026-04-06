@@ -10,9 +10,13 @@ export async function getListing(id: string) {
   });
 }
 
-export async function getListings(cursor?: string) {
+export async function getListings({ cursor, q, location }: { cursor?: string; q?: string; location?: string } = {}) {
   return db.listing.findMany({
-    where: { status: "active" },
+    where: {
+      status: "active",
+      ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
+      ...(location ? { location: { contains: location, mode: "insensitive" } } : {}),
+    },
     orderBy: { createdAt: "desc" },
     take: 24,
     ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
