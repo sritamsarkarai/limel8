@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../bones/registry";
 import { ProgressBar } from "@/components/layout/ProgressBar";
 
 export const metadata: Metadata = {
