@@ -23,20 +23,25 @@ export default function ConversationPage({
   const [currentProfileId, setCurrentProfileId] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Fetch initial messages (GET also marks thread as read)
   useEffect(() => {
     async function loadMessages() {
-      const res = await fetch(`/api/messages/${profileId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data);
-        // Determine current profile from session user's messages
-        if (data.length > 0) {
-          // The recipient of others' messages is the current profile
+      try {
+        const res = await fetch(`/api/messages/${profileId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setMessages(data);
+          // Determine current profile from session user's messages
+          if (data.length > 0) {
+            // The recipient of others' messages is the current profile
+          }
         }
+      } finally {
+        setIsLoading(false);
       }
     }
     loadMessages();
@@ -159,6 +164,22 @@ export default function ConversationPage({
     } finally {
       setSending(false);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-full max-w-2xl mx-auto px-4 py-8">
+        <div className="flex-1 space-y-4 overflow-y-auto">
+          {[false, true, false, true, false, true].map((isRight, i) => (
+            <div key={i} className={`flex ${isRight ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`h-10 rounded-2xl animate-pulse bg-zinc-800 ${isRight ? "w-48" : "w-56"}`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
