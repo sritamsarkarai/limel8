@@ -94,9 +94,14 @@ export default function LoginPage() {
           </div>
 
           <div style={{ animation: "fadeUp 400ms cubic-bezier(0.16,1,0.3,1) 300ms both" }}>
-            <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
+                Password
+              </label>
+              <a href="/forgot-password" className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors duration-150">
+                Forgot password?
+              </a>
+            </div>
             <input
               id="password"
               type="password"
