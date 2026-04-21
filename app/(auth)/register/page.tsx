@@ -26,7 +26,7 @@ export default function RegisterPage() {
         setError(data.error ?? "Registration failed");
         return;
       }
-      router.push("/login");
+      router.push(data.redirect ?? "/login");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

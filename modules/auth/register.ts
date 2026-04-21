@@ -1,6 +1,8 @@
 import "server-only";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { db } from "@/lib/db";
+import { sendVerificationEmail } from "@/lib/email";
 
 interface RegisterInput {
   email: string;
@@ -18,12 +20,24 @@ export async function registerUser({ email, password, name }: RegisterInput) {
   // Hash outside the transaction — CPU-bound, should not hold a DB connection
   const passwordHash = await bcrypt.hash(password, 12);
 
-  return db.$transaction(async (tx) => {
+  const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+  const emailVerificationExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+  await db.$transaction(async (tx) => {
     const existing = await tx.user.findUnique({ where: { email: normalisedEmail } });
     if (existing) throw new Error("Email already in use");
 
-    const user = await tx.user.create({ data: { email: normalisedEmail, passwordHash } });
-    const profile = await tx.profile.create({ data: { userId: user.id, name } });
-    return { user, profile };
+    const user = await tx.user.create({
+      data: {
+        email: normalisedEmail,
+        passwordHash,
+        emailVerificationToken,
+        emailVerificationExpiry,
+      },
+    });
+    await tx.profile.create({ data: { userId: user.id, name } });
   });
+
+  await sendVerificationEmail(normalisedEmail, emailVerificationToken);
 }
+

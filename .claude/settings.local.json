@@ -63,7 +63,13 @@
       "Bash(cmd.exe /c \"uvx code-review-graph serve --help\")",
       "Bash(cmd.exe:*)",
       "Bash(/c/Users/C5182688/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/scripts/start-server.sh:*)",
-      "Bash(cmd /c \"set /p line=< .env && echo %line%\")"
+      "Bash(cmd /c \"set /p line=< .env && echo %line%\")",
+      "Skill(update-config)",
+      "Read(//c/Users/C5182688/.config/**)",
+      "Read(//c/Users/C5182688/AppData/Roaming/**)",
+      "Read(//c/Users/C5182688/**)",
+      "Bash(awk '{print $NF}')",
+      "Bash(DATABASE_URL=\"postgresql://dummy:dummy@localhost:5432/dummy\" DIRECT_URL=\"postgresql://dummy:dummy@localhost:5432/dummy\" npx prisma generate)"
     ]
   }
 }

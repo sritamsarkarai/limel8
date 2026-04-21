@@ -20,7 +20,9 @@ export const authOptions: NextAuthOptions = {
         const user = await db.user.findUnique({ where: { email: credentials.email } });
         if (!user?.passwordHash) return null;
         const valid = await bcrypt.compare(credentials.password, user.passwordHash);
-        return valid ? user : null;
+        if (!valid) return null;
+        if (!user.emailVerified) throw new Error("EMAIL_NOT_VERIFIED");
+        return user;
       },
     }),
     GoogleProvider({

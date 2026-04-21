@@ -22,7 +22,9 @@ export default function LoginPage() {
       redirect: false,
     });
     setLoading(false);
-    if (result?.error) {
+    if (result?.error === "EMAIL_NOT_VERIFIED") {
+      setError("Please verify your email before signing in. Check your inbox or resend the verification email.");
+    } else if (result?.error) {
       setError("Invalid email or password");
     } else if (result?.url) {
       router.push("/feed");
@@ -66,6 +68,13 @@ export default function LoginPage() {
         {error && (
           <div className="mb-4 rounded-lg bg-red-950 border border-red-800 p-3 text-sm text-red-400">
             {error}
+            {error.includes("verify your email") && (
+              <div className="mt-2">
+                <a href="/resend-verification" className="text-cyan-400 hover:text-cyan-300 transition-colors text-xs">
+                  Resend verification email →
+                </a>
+              </div>
+            )}
           </div>
         )}
 
