@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { supabaseAdmin } from "@/lib/supabase.server";
+import { getSupabaseAdmin } from "@/lib/supabase.server";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   const path = `${session.user.id}/${kind}.${ext}`;
 
   const arrayBuffer = await file.arrayBuffer();
-  const { error } = await supabaseAdmin.storage
+  const { error } = await getSupabaseAdmin().storage
     .from(BUCKET)
     .upload(path, arrayBuffer, {
       contentType: file.type,
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const { data } = supabaseAdmin.storage.from(BUCKET).getPublicUrl(path);
+  const { data } = getSupabaseAdmin().storage.from(BUCKET).getPublicUrl(path);
 
   return NextResponse.json({ url: data.publicUrl });
 }
