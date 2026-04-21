@@ -9,11 +9,11 @@ export async function POST(req: Request) {
   const { email } = await req.json();
   if (!email) return NextResponse.json({ error: "Missing email" }, { status: 400 });
 
-  const user = await db.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+  const normalised = email.toLowerCase().trim();
+  const user = await db.user.findUnique({ where: { email: normalised } });
 
-  // Always return ok — never reveal whether an email is registered
   if (!user || !user.passwordHash) {
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ error: "NO_ACCOUNT" }, { status: 404 });
   }
 
   const token = crypto.randomBytes(32).toString("hex");
@@ -24,7 +24,11 @@ export async function POST(req: Request) {
     data: { passwordResetToken: token, passwordResetExpiry: expiry },
   });
 
-  await sendPasswordResetEmail(user.email, token);
+  try {
+    await sendPasswordResetEmail(user.email, token);
+  } catch (err) {
+    console.error("Failed to send password reset email:", err);
+  }
 
   return NextResponse.json({ ok: true });
 }

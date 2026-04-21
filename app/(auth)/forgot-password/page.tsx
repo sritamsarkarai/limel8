@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sent" | "no_account" | "error">("idle");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -16,7 +16,12 @@ export default function ForgotPasswordPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      setStatus(res.ok ? "sent" : "error");
+      if (res.ok) {
+        setStatus("sent");
+      } else {
+        const data = await res.json();
+        setStatus(data.error === "NO_ACCOUNT" ? "no_account" : "error");
+      }
     } catch {
       setStatus("error");
     } finally {
@@ -67,7 +72,7 @@ export default function ForgotPasswordPage() {
                 Check your email
               </h1>
               <p className="text-sm text-zinc-400 leading-relaxed">
-                If that address has an account, a reset link is on its way. The link expires in{" "}
+                A reset link has been sent to <span className="text-zinc-300 font-medium">{email}</span>. The link expires in{" "}
                 <span className="text-zinc-300 font-medium">1 hour</span>.
               </p>
             </div>
@@ -75,6 +80,41 @@ export default function ForgotPasswordPage() {
               <a href="/login" className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors duration-150 cursor-pointer">
                 Back to sign in
               </a>
+            </div>
+          </div>
+        ) : status === "no_account" ? (
+          <div className="text-center">
+            <div className="mb-5 flex justify-center" style={{ animation: "scaleIn 500ms cubic-bezier(0.16,1,0.3,1) 50ms both" }}>
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10 border border-amber-500/25">
+                <svg className="h-7 w-7 text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+              </div>
+            </div>
+            <div style={{ animation: "fadeUp 400ms cubic-bezier(0.16,1,0.3,1) 200ms both" }}>
+              <h1 className="mb-2 text-2xl font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>
+                No account found
+              </h1>
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                We couldn&apos;t find an account for{" "}
+                <span className="text-zinc-300 font-medium">{email}</span>.
+                <br />
+                New here? Create a free account to get started.
+              </p>
+            </div>
+            <div className="mt-6 flex flex-col items-center gap-3" style={{ animation: "fadeUp 400ms cubic-bezier(0.16,1,0.3,1) 320ms both" }}>
+              <a
+                href="/register"
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-400 to-violet-400 px-6 py-2.5 text-sm font-bold text-zinc-950 cursor-pointer shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_28px_rgba(34,211,238,0.35)] transition-shadow duration-200"
+              >
+                Create an account
+              </a>
+              <button
+                onClick={() => setStatus("idle")}
+                className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors duration-150 cursor-pointer"
+              >
+                Try a different email
+              </button>
             </div>
           </div>
         ) : (
