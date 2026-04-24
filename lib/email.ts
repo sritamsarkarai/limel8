@@ -8,7 +8,7 @@ function getResend() {
   return _resend;
 }
 
-const FROM = process.env.EMAIL_FROM ?? "LimeL8 <noreply@limel8.com>";
+const FROM = process.env.EMAIL_FROM ?? "LimeL8 <onboarding@resend.dev>";
 const BASE_URL = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
 
 export async function sendPasswordResetEmail(email: string, token: string) {
